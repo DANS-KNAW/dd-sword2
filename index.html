@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="None" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>dd-sword2</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Manual";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="." class="icon icon-home"> dd-sword2
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href=".">Manual</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#synopsis">SYNOPSIS</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#description">DESCRIPTION</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#context">Context</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#purpose-of-the-service">Purpose of the service</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#interfaces">Interfaces</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#swordv2">SWORDv2</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#deposit-directories">Deposit directories</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#admin-console">Admin console</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#processing">Processing</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#creating-and-submitting-a-deposit">Creating and submitting a deposit</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#finalizing-a-deposit">Finalizing a deposit</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#tracking-post-submission-processing">Tracking post-submission processing</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#arguments">ARGUMENTS</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#examples">EXAMPLES</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#installation">INSTALLATION</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#configuration">CONFIGURATION</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#building-from-source">BUILDING FROM SOURCE</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">dd-sword2</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" alt="Docs"></a> &raquo;</li><li>Manual</li>
+    <li class="wy-breadcrumbs-aside">
+        <a href="https://github.com/DANS-KNAW/dd-sword2/edit/master/docs/index.md"> Edit on DANS-KNAW/dd-sword2</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="dd-sword2">dd-sword2<a class="headerlink" href="#dd-sword2" title="Permanent link">&para;</a></h1>
+<p>DANS SWORD v2 based deposit service</p>
+<h2 id="synopsis">SYNOPSIS<a class="headerlink" href="#synopsis" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>dd-sword2 { server | check }
+</code></pre></div>
+
+<h2 id="description">DESCRIPTION<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
+<h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h3>
+<h4 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h4>
+<p>The <code>dd-sword2</code> service is the <a href="https://www.dans.knaw.nl/" target="_blank">DANS</a> implementation of the <a href="https://sword.cottagelabs.com/previous-versions-of-sword/sword-v2/" target="_blank">SWORDv2</a> protocol. It is a rewrite in Java of the Scala-based
+project <a href="https://dans-knaw.github.io/easy-sword2/" target="_blank">easy-sword2</a>. As its predecessor, it does <strong>not</strong> implement the full SWORDv2 specifications. Also, since the SWORDv2 specs leave
+various important issues up to the implementer, the service adds some features. The best starting point for learning about <code>dd-sword2</code> is this document. Where
+appropriate it contains references to the SWORDv2 specifications document. Client programmers should consult the <a href="https://github.com/DANS-KNAW/easy-sword2-dans-examples" target="_blank">easy-sword2-dans-examples</a>
+project.</p>
+<h4 id="purpose-of-the-service">Purpose of the service<a class="headerlink" href="#purpose-of-the-service" title="Permanent link">&para;</a></h4>
+<p>At the highest level <code>dd-sword2</code> is a service that accepts ZIP packages that comply with the <a href="https://datatracker.ietf.org/doc/html/rfc8493" target="_blank">BagIt</a> packaging format and produces a
+<a href="https://dans-knaw.github.io/dd-ingest-flow/deposit-directory/" target="_blank">deposit directory</a> for each.</p>
+<h3 id="interfaces">Interfaces<a class="headerlink" href="#interfaces" title="Permanent link">&para;</a></h3>
+<p>The service has the following interfaces.</p>
+<p><img alt="Overview" src="img/overview.png" width="50%" /></p>
+<h4 id="swordv2">SWORDv2<a class="headerlink" href="#swordv2" title="Permanent link">&para;</a></h4>
+<ul>
+<li><em>Protocol type</em>: HTTP</li>
+<li><em>Internal or external</em>: <strong>external</strong></li>
+<li><em>Purpose</em>: depositing packages, submitting them for archival processing and tracking progress</li>
+</ul>
+<h4 id="deposit-directories">Deposit directories<a class="headerlink" href="#deposit-directories" title="Permanent link">&para;</a></h4>
+<ul>
+<li><em>Protocol type</em>: Shared filesystem</li>
+<li><em>Internal or external</em>: <strong>internal</strong></li>
+<li><em>Purpose</em>: handing packages to the post-submission processing service and reporting back status changes written by that service to the <code>deposit.properties</code>
+  files of the deposit directories.</li>
+</ul>
+<h4 id="admin-console">Admin console<a class="headerlink" href="#admin-console" title="Permanent link">&para;</a></h4>
+<ul>
+<li><em>Protocol type</em>: HTTP</li>
+<li><em>Internal or external</em>: <strong>internal</strong></li>
+<li><em>Purpose</em>: application monitoring and management</li>
+</ul>
+<h3 id="processing">Processing<a class="headerlink" href="#processing" title="Permanent link">&para;</a></h3>
+<h4 id="creating-and-submitting-a-deposit">Creating and submitting a deposit<a class="headerlink" href="#creating-and-submitting-a-deposit" title="Permanent link">&para;</a></h4>
+<p>TODO</p>
+<h4 id="finalizing-a-deposit">Finalizing a deposit<a class="headerlink" href="#finalizing-a-deposit" title="Permanent link">&para;</a></h4>
+<p>TODO</p>
+<h4 id="tracking-post-submission-processing">Tracking post-submission processing<a class="headerlink" href="#tracking-post-submission-processing" title="Permanent link">&para;</a></h4>
+<p>TODO</p>
+<h2 id="arguments">ARGUMENTS<a class="headerlink" href="#arguments" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>    positional arguments:
+    {server,check}         available commands
+
+    named arguments:
+    -h, --help             show this help message and exit
+    -v, --version          show the application version and exit
+</code></pre></div>
+
+<h2 id="examples">EXAMPLES<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
+<p>Java client code examples are available in <a href="https://github.com/DANS-KNAW/easy-sword2-dans-examples" target="_blank">easy-sword2-dans-examples</a>.</p>
+<h2 id="installation">INSTALLATION<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<p>Currently this project is built as an RPM package for RHEL7/CentOS7 and later. The RPM will install the binaries to
+<code>/opt/dans.knaw.nl/dd-sword2</code> and the configuration files to <code>/etc/opt/dans.knaw.nl/dd-sword2</code>.</p>
+<p>For installation on systems that do no support RPM and/or systemd:</p>
+<ol>
+<li>Build the tarball (see next section).</li>
+<li>Extract it to some location on your system, for example <code>/opt/dans.knaw.nl/dd-sword2</code>.</li>
+<li>Start the service with the following command
+   <div class="highlight"><pre><span></span><code>/opt/dans.knaw.nl/dd-sword2/bin/dd-sword2 server /opt/dans.knaw.nl/dd-sword2/cfg/config.yml 
+</code></pre></div></li>
+</ol>
+<h2 id="configuration">CONFIGURATION<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<p>This service can be configured by changing the settings
+in <a href="https://github.com/DANS-KNAW/dd-sword2/blob/master/src/main/assembly/dist/cfg/config.yml" target="_blank"><code>config.yml</code></a>. See the comments in that file for
+more information.</p>
+<h2 id="building-from-source">BUILDING FROM SOURCE<a class="headerlink" href="#building-from-source" title="Permanent link">&para;</a></h2>
+<p>Prerequisites:</p>
+<ul>
+<li>Java 11 or higher</li>
+<li>Maven 3.3.3 or higher</li>
+<li>RPM</li>
+</ul>
+<p>Steps:</p>
+<div class="codehilite"><pre><span></span><code>git clone https://github.com/DANS-KNAW/dd-sword2.git
+cd dd-sword2 
+mvn clean install
+</code></pre></div>
+
+<p>If the <code>rpm</code> executable is found at <code>/usr/local/bin/rpm</code>, the build profile that includes the RPM packaging will be activated. If <code>rpm</code> is available, but at a
+different path, then activate it by using Maven's <code>-P</code> switch: <code>mvn -Prpm install</code>.</p>
+<p>Alternatively, to build the tarball execute:</p>
+<div class="codehilite"><pre><span></span><code>mvn clean install assembly:single
+</code></pre></div>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme_extra.js" defer></script>
+    <script src="js/theme.js" defer></script>
+      <script src="search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.3.0
+Build Date UTC : 2022-07-08 08:12:57.272327+00:00
+-->
