@@ -16,11 +16,17 @@
 package nl.knaw.dans.sword2.resources;
 
 import ch.qos.logback.classic.LoggerContext;
+import io.dropwizard.configuration.ConfigurationSourceProvider;
+import io.dropwizard.configuration.FileConfigurationSourceProvider;
+import io.dropwizard.configuration.ResourceConfigurationSourceProvider;
+import io.dropwizard.configuration.SubstitutingSourceProvider;
+import io.dropwizard.testing.ConfigOverride;
 import io.dropwizard.testing.ResourceHelpers;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import nl.knaw.dans.sword2.DdSword2Application;
 import nl.knaw.dans.sword2.DdSword2Configuration;
+import nl.knaw.dans.sword2.TestFixture;
 import nl.knaw.dans.sword2.api.entry.Entry;
 import nl.knaw.dans.sword2.api.error.Error;
 import nl.knaw.dans.sword2.api.statement.Feed;
@@ -31,6 +37,7 @@ import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.text.StringSubstitutor;
 import org.glassfish.jersey.media.multipart.BodyPart;
 import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -47,9 +54,11 @@ import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -59,33 +68,32 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(DropwizardExtensionsSupport.class)
-class CollectionResourceImplIntegrationTest {
+class CollectionResourceImplIntegrationTest extends TestFixture {
 
     private final DropwizardAppExtension<DdSword2Configuration> EXT = new DropwizardAppExtension<>(
-        DdSword2Application.class,
-        ResourceHelpers.resourceFilePath("test-etc/config-regular.yml")
-    );
+            DdSword2Application.class,
+            ResourceHelpers.resourceFilePath("test-etc/config-regular.yml"),
+            new SubstitutingSourceProvider(new FileConfigurationSourceProvider(), new StringSubstitutor(Collections.singletonMap("TEST_DIR", testDir.toString()))));
 
     @BeforeEach
     void startUp() throws IOException {
-        FileUtils.deleteDirectory(Path.of("data/tmp").toFile());
-        new FileServiceImpl().ensureDirectoriesExist(Path.of("data/tmp/1"));
+        FileUtils.deleteDirectory(testDir.toFile());
+        new FileServiceImpl().ensureDirectoriesExist(testDir.resolve("1"));
     }
 
     @AfterEach
     void tearDown() throws IOException {
-        FileUtils.deleteDirectory(Path.of("data/tmp").toFile());
-        ((LoggerContext)org.slf4j.LoggerFactory.getILoggerFactory()).stop();
+        ((LoggerContext) org.slf4j.LoggerFactory.getILoggerFactory()).stop();
     }
 
     Builder buildRequest(String path) {
         var url = String.format("http://localhost:%s%s", EXT.getLocalPort(), path);
 
         return RequestClientBuilder.buildClient()
-            .target(url)
-            .register(MultiPartFeature.class)
-            .request()
-            .header("authorization", "Basic dXNlcjAwMTp1c2VyMDAx");
+                .target(url)
+                .register(MultiPartFeature.class)
+                .request()
+                .header("authorization", "Basic dXNlcjAwMTp1c2VyMDAx");
     }
 
     @Test
@@ -95,20 +103,20 @@ class CollectionResourceImplIntegrationTest {
         assert path != null;
 
         var result = buildRequest("/collection/1")
-            .header("content-type", "application/zip")
-            .header("content-md5", "bc27e20467a773501a4ae37fb85a9c3f")
-            .header("content-disposition", "attachment; filename=bag.zip")
-            .header("in-progress", "true")
-            .post(Entity.entity(path.openStream(), MediaType.valueOf("application/zip")));
+                .header("content-type", "application/zip")
+                .header("content-md5", "bc27e20467a773501a4ae37fb85a9c3f")
+                .header("content-disposition", "attachment; filename=bag.zip")
+                .header("in-progress", "true")
+                .post(Entity.entity(path.openStream(), MediaType.valueOf("application/zip")));
 
         assertEquals(201, result.getStatus());
 
         var receipt = result.readEntity(Entry.class);
         var parts = receipt.getId()
-            .split("/");
+                .split("/");
         var id = parts[parts.length - 1];
 
-        var firstPath = Path.of("data/tmp/1/uploads/", id);
+        var firstPath = testDir.resolve("1/uploads/").resolve(id);
 
         assertTrue(Files.exists(firstPath.resolve("deposit.properties")));
         assertTrue(Files.exists(firstPath.resolve("bag.zip")));
@@ -124,7 +132,7 @@ class CollectionResourceImplIntegrationTest {
         assertEquals("Deposit is open for additional data", config.getString("state.description"));
 
         var statusResult = buildRequest("/statement/" + id)
-            .get();
+                .get();
 
         var feed = statusResult.readEntity(Feed.class);
         assertEquals("http://localhost:20320/statement/" + id, feed.getId());
@@ -137,21 +145,21 @@ class CollectionResourceImplIntegrationTest {
         assert path != null;
 
         var result = buildRequest("/collection/1")
-            .header("content-type", "application/zip")
-            .header("content-md5", "bc27e20467a773501a4ae37fb85a9c3f")
-            .header("content-disposition", "attachment; filename=bag.zip")
-            .header("in-progress", "true")
-            .post(Entity.entity(path.openStream(), MediaType.valueOf("application/zip")));
+                .header("content-type", "application/zip")
+                .header("content-md5", "bc27e20467a773501a4ae37fb85a9c3f")
+                .header("content-disposition", "attachment; filename=bag.zip")
+                .header("in-progress", "true")
+                .post(Entity.entity(path.openStream(), MediaType.valueOf("application/zip")));
 
         assertEquals(201, result.getStatus());
 
         var receipt = result.readEntity(Entry.class);
         var parts = receipt.getId()
-            .split("/");
+                .split("/");
         var id = parts[parts.length - 1];
 
         var statusResult = buildRequest("/container/" + id)
-            .get();
+                .get();
 
         var feed = statusResult.readEntity(Entry.class);
         assertEquals("http://localhost:20320/container/" + id, feed.getId());
@@ -164,21 +172,21 @@ class CollectionResourceImplIntegrationTest {
         assert path != null;
 
         var result = buildRequest("/collection/1")
-            .header("content-type", "application/zip")
-            .header("content-md5", "bc27e20467a773501a4ae37fb85a9c3f")
-            .header("content-disposition", "attachment; filename=bag.zip")
-            .header("in-progress", "true")
-            .post(Entity.entity(path.openStream(), MediaType.valueOf("application/zip")));
+                .header("content-type", "application/zip")
+                .header("content-md5", "bc27e20467a773501a4ae37fb85a9c3f")
+                .header("content-disposition", "attachment; filename=bag.zip")
+                .header("in-progress", "true")
+                .post(Entity.entity(path.openStream(), MediaType.valueOf("application/zip")));
 
         assertEquals(201, result.getStatus());
 
         var receipt = result.readEntity(Entry.class);
         var parts = receipt.getId()
-            .split("/");
+                .split("/");
         var id = parts[parts.length - 1];
 
         var statusResult = buildRequest("/container/" + id)
-            .head();
+                .head();
 
         assertEquals(200, statusResult.getStatus());
         assertEquals("http://localhost:20320/container/" + id, statusResult.getHeaderString("location"));
@@ -187,13 +195,14 @@ class CollectionResourceImplIntegrationTest {
     @Test
     void testDepositReceiptFromContainerEndpointNotFound() {
         var statusResult = buildRequest("/container/" + "random_id")
-            .get();
+                .get();
 
         assertEquals(404, statusResult.getStatus());
     }
 
     @Test
-    void testZipInParts() throws IOException, ConfigurationException, NoSuchAlgorithmException, InterruptedException {
+    void testZipInParts() throws
+            IOException, ConfigurationException, NoSuchAlgorithmException, InterruptedException {
         var path = getClass().getResource("/zips/audiences.zip");
         assert path != null;
 
@@ -203,11 +212,11 @@ class CollectionResourceImplIntegrationTest {
 
         var checksum = md5Checksum(firstPart);
         var result = buildRequest("/collection/1")
-            .header("content-type", "application/octet-stream")
-            .header("content-md5", checksum)
-            .header("content-disposition", "attachment; filename=bag.zip.1")
-            .header("in-progress", "true")
-            .post(Entity.entity(firstPart, MediaType.valueOf("application/octet-stream")));
+                .header("content-type", "application/octet-stream")
+                .header("content-md5", checksum)
+                .header("content-disposition", "attachment; filename=bag.zip.1")
+                .header("in-progress", "true")
+                .post(Entity.entity(firstPart, MediaType.valueOf("application/octet-stream")));
 
         assertEquals(201, result.getStatus());
 
@@ -218,22 +227,22 @@ class CollectionResourceImplIntegrationTest {
         var secondPart = Arrays.copyOfRange(bytes, bagSize, bagSize * 2);
         var checksum2 = md5Checksum(secondPart);
         var result2 = buildRequest("/container/" + id)
-            .header("content-type", "application/octet-stream")
-            .header("content-md5", checksum2)
-            .header("content-disposition", "attachment; filename=bag.zip.2")
-            .header("in-progress", "true")
-            .post(Entity.entity(secondPart, MediaType.valueOf("application/octet-stream")));
+                .header("content-type", "application/octet-stream")
+                .header("content-md5", checksum2)
+                .header("content-disposition", "attachment; filename=bag.zip.2")
+                .header("in-progress", "true")
+                .post(Entity.entity(secondPart, MediaType.valueOf("application/octet-stream")));
         assertEquals(200, result2.getStatus());
 
         var thirdPart = Arrays.copyOfRange(bytes, bagSize * 2, bytes.length);
         var checksum3 = md5Checksum(thirdPart);
 
         var result3 = buildRequest("/container/" + id)
-            .header("content-type", "application/octet-stream")
-            .header("content-md5", checksum3)
-            .header("content-disposition", "attachment; filename=bag.zip.3")
-            .header("in-progress", "false")
-            .post(Entity.entity(thirdPart, MediaType.valueOf("application/zip")));
+                .header("content-type", "application/octet-stream")
+                .header("content-md5", checksum3)
+                .header("content-disposition", "attachment; filename=bag.zip.3")
+                .header("in-progress", "false")
+                .post(Entity.entity(thirdPart, MediaType.valueOf("application/zip")));
         assertEquals(200, result3.getStatus());
 
         var count = 0;
@@ -253,7 +262,7 @@ class CollectionResourceImplIntegrationTest {
 
         assertEquals("SUBMITTED", state);
 
-        var firstPath = Path.of("data/tmp/1/deposits/", id);
+        var firstPath = testDir.resolve("1/deposits/").resolve(id);
         assertTrue(Files.exists(firstPath.resolve("deposit.properties")));
         assertTrue(Files.exists(firstPath.resolve("audiences/bagit.txt")));
         assertFalse(Files.exists(firstPath.resolve("bag.zip.1")));
@@ -262,7 +271,8 @@ class CollectionResourceImplIntegrationTest {
     }
 
     @Test
-    void testZipInPartsWithInvalidHash() throws IOException, ConfigurationException, NoSuchAlgorithmException, InterruptedException {
+    void testZipInPartsWithInvalidHash() throws
+            IOException, ConfigurationException, NoSuchAlgorithmException, InterruptedException {
         var path = getClass().getResource("/zips/audiences.zip");
         assert path != null;
 
@@ -272,11 +282,11 @@ class CollectionResourceImplIntegrationTest {
 
         var checksum = md5Checksum(firstPart);
         var result = buildRequest("/collection/1")
-            .header("content-type", "application/octet-stream")
-            .header("content-md5", checksum)
-            .header("content-disposition", "attachment; filename=bag.zip.1")
-            .header("in-progress", "true")
-            .post(Entity.entity(firstPart, MediaType.valueOf("application/octet-stream")));
+                .header("content-type", "application/octet-stream")
+                .header("content-md5", checksum)
+                .header("content-disposition", "attachment; filename=bag.zip.1")
+                .header("in-progress", "true")
+                .post(Entity.entity(firstPart, MediaType.valueOf("application/octet-stream")));
 
         assertEquals(201, result.getStatus());
 
@@ -287,25 +297,25 @@ class CollectionResourceImplIntegrationTest {
         var secondPart = Arrays.copyOfRange(bytes, bagSize, bagSize * 2);
         var checksum2 = md5Checksum(secondPart);
         var result2 = buildRequest("/container/" + id)
-            .header("content-type", "application/octet-stream")
-            .header("content-md5", checksum2)
-            .header("content-disposition", "attachment; filename=bag.zip.2")
-            .header("in-progress", "true")
-            .post(Entity.entity(secondPart, MediaType.valueOf("application/octet-stream")));
+                .header("content-type", "application/octet-stream")
+                .header("content-md5", checksum2)
+                .header("content-disposition", "attachment; filename=bag.zip.2")
+                .header("in-progress", "true")
+                .post(Entity.entity(secondPart, MediaType.valueOf("application/octet-stream")));
         assertEquals(200, result2.getStatus());
 
         var thirdPart = Arrays.copyOfRange(bytes, bagSize * 2, bytes.length);
         var checksum3 = md5Checksum(thirdPart);
 
         var result3 = buildRequest("/container/" + id)
-            .header("content-type", "application/octet-stream")
-            .header("content-md5", "invalid_checksum")
-            .header("content-disposition", "attachment; filename=bag.zip.3")
-            .header("in-progress", "false")
-            .post(Entity.entity(thirdPart, MediaType.valueOf("application/zip")));
+                .header("content-type", "application/octet-stream")
+                .header("content-md5", "invalid_checksum")
+                .header("content-disposition", "attachment; filename=bag.zip.3")
+                .header("in-progress", "false")
+                .post(Entity.entity(thirdPart, MediaType.valueOf("application/zip")));
         assertEquals(412, result3.getStatus());
 
-        var firstPath = Path.of("data/tmp/1/uploads/", id);
+        var firstPath = testDir.resolve("1/uploads/").resolve(id);
         assertTrue(Files.exists(firstPath.resolve("bag.zip.1")));
         assertTrue(Files.exists(firstPath.resolve("bag.zip.2")));
         assertTrue(Files.exists(firstPath.resolve("bag.zip.3")));
@@ -318,11 +328,11 @@ class CollectionResourceImplIntegrationTest {
         assert path != null;
 
         var result = buildRequest("/collection/1")
-            .header("content-type", "application/zip")
-            .header("content-md5", "bc27e20467a773501a4ae37fb85a9c3f")
-            .header("in-progress", "false")
-            .header("content-disposition", "attachment; filename=bag.zip")
-            .post(Entity.entity(path.openStream(), MediaType.valueOf("application/zip")));
+                .header("content-type", "application/zip")
+                .header("content-md5", "bc27e20467a773501a4ae37fb85a9c3f")
+                .header("in-progress", "false")
+                .header("content-disposition", "attachment; filename=bag.zip")
+                .post(Entity.entity(path.openStream(), MediaType.valueOf("application/zip")));
 
         assertEquals(201, result.getStatus());
 
@@ -336,10 +346,10 @@ class CollectionResourceImplIntegrationTest {
         // waiting at most 5 seconds for the background thread to handle this
         while (count < 5) {
             var statement = buildRequest("/statement/" + id)
-                .get(Feed.class);
+                    .get(Feed.class);
 
             state = statement.getCategory()
-                .getTerm();
+                    .getTerm();
 
             if (state.equals("SUBMITTED")) {
                 break;
@@ -350,7 +360,7 @@ class CollectionResourceImplIntegrationTest {
 
         assertEquals("SUBMITTED", state);
 
-        var firstPath = Path.of("data/tmp/1/deposits/" + id);
+        var firstPath = testDir.resolve("1/deposits").resolve(id);
         var config = getProperties(firstPath);
 
         assertNotNull(config.getString("bag-store.bag-id"));
@@ -371,11 +381,11 @@ class CollectionResourceImplIntegrationTest {
         assert path != null;
 
         var result = buildRequest("/collection/1")
-            .header("content-type", "application/zip")
-            .header("content-md5", "db45b2cfeb223d35d25a6d5208b528db")
-            .header("in-progress", "false")
-            .header("content-disposition", "attachment; filename=bag.zip")
-            .post(Entity.entity(path.openStream(), MediaType.valueOf("application/zip")));
+                .header("content-type", "application/zip")
+                .header("content-md5", "db45b2cfeb223d35d25a6d5208b528db")
+                .header("in-progress", "false")
+                .header("content-disposition", "attachment; filename=bag.zip")
+                .post(Entity.entity(path.openStream(), MediaType.valueOf("application/zip")));
 
         assertEquals(201, result.getStatus());
 
@@ -389,10 +399,10 @@ class CollectionResourceImplIntegrationTest {
         // waiting at most 5 seconds for the background thread to handle this
         while (count < 5) {
             var statement = buildRequest("/statement/" + id)
-                .get(Feed.class);
+                    .get(Feed.class);
 
             state = statement.getCategory()
-                .getTerm();
+                    .getTerm();
 
             if (state.equals("INVALID")) {
                 break;
@@ -403,7 +413,7 @@ class CollectionResourceImplIntegrationTest {
 
         assertEquals("INVALID", state);
 
-        var firstPath = Path.of("data/tmp/1/uploads/" + id);
+        var firstPath = testDir.resolve("1/uploads").resolve(id);
         var config = getProperties(firstPath);
 
         assertNotNull(config.getString("bag-store.bag-id"));
@@ -426,11 +436,11 @@ class CollectionResourceImplIntegrationTest {
         assert path != null;
 
         var result = buildRequest("/collection/1")
-            .header("content-type", "application/zip")
-            .header("content-md5", "invalid_hash")
-            .header("in-progress", "false")
-            .header("content-disposition", "attachment; filename=bag.zip")
-            .post(Entity.entity(path.openStream(), MediaType.valueOf("application/zip")));
+                .header("content-type", "application/zip")
+                .header("content-md5", "invalid_hash")
+                .header("in-progress", "false")
+                .header("content-disposition", "attachment; filename=bag.zip")
+                .post(Entity.entity(path.openStream(), MediaType.valueOf("application/zip")));
 
         assertEquals(412, result.getStatus());
 
@@ -456,9 +466,9 @@ class CollectionResourceImplIntegrationTest {
         multiPart.setMediaType(MediaType.valueOf("multipart/related"));
 
         var result = buildRequest("/collection/1")
-            .header("content-length", 1000)
-            .header("in-progress", "true")
-            .post(Entity.entity(multiPart, multiPart.getMediaType()));
+                .header("content-length", 1000)
+                .header("in-progress", "true")
+                .post(Entity.entity(multiPart, multiPart.getMediaType()));
 
         assertEquals(405, result.getStatus());
     }
@@ -470,11 +480,11 @@ class CollectionResourceImplIntegrationTest {
         assert path != null;
 
         var result = buildRequest("/collection/123")
-            .header("content-type", "application/zip")
-            .header("content-md5", "bc27e20467a773501a4ae37fb85a9c3f")
-            .header("content-disposition", "attachment; filename=bag.zip")
-            .header("in-progress", "true")
-            .post(Entity.entity(path.openStream(), MediaType.valueOf("application/zip")));
+                .header("content-type", "application/zip")
+                .header("content-md5", "bc27e20467a773501a4ae37fb85a9c3f")
+                .header("content-disposition", "attachment; filename=bag.zip")
+                .header("in-progress", "true")
+                .post(Entity.entity(path.openStream(), MediaType.valueOf("application/zip")));
 
         assertEquals(405, result.getStatus());
 
@@ -491,11 +501,11 @@ class CollectionResourceImplIntegrationTest {
         assert path != null;
 
         var result = buildRequest("/collection/123")
-            .header("content-type", "application/zip")
-            .header("content-md5", "bc27e20467a773501a4ae37fb85a9c3f")
-            .header("content-disposition", "attachment; filename=bag.zip")
-            .header("in-progress", "this is something else")
-            .post(Entity.entity(path.openStream(), MediaType.valueOf("application/zip")));
+                .header("content-type", "application/zip")
+                .header("content-md5", "bc27e20467a773501a4ae37fb85a9c3f")
+                .header("content-disposition", "attachment; filename=bag.zip")
+                .header("in-progress", "this is something else")
+                .post(Entity.entity(path.openStream(), MediaType.valueOf("application/zip")));
 
         assertEquals(400, result.getStatus());
 
@@ -511,10 +521,10 @@ class CollectionResourceImplIntegrationTest {
         assert path != null;
 
         var result = buildRequest("/collection/1")
-            .header("content-length", 1000)
-            .header("in-progress", "true")
-            .header("content-type", "application/atom+xml")
-            .post(Entity.entity(path.openStream(), MediaType.valueOf("application/atom+xml")));
+                .header("content-length", 1000)
+                .header("in-progress", "true")
+                .header("content-type", "application/atom+xml")
+                .post(Entity.entity(path.openStream(), MediaType.valueOf("application/atom+xml")));
 
         assertEquals(405, result.getStatus());
     }
@@ -522,12 +532,12 @@ class CollectionResourceImplIntegrationTest {
     FileBasedConfiguration getProperties(Path path) throws ConfigurationException {
         var params = new Parameters();
         var paramConfig = params.properties()
-            .setFileName(path.resolve("deposit.properties")
-                .toString());
+                .setFileName(path.resolve("deposit.properties")
+                        .toString());
 
         var builder = new FileBasedConfigurationBuilder<FileBasedConfiguration>(
-            PropertiesConfiguration.class, null, true).configure(
-            paramConfig);
+                PropertiesConfiguration.class, null, true).configure(
+                paramConfig);
 
         return builder.getConfiguration();
     }
@@ -537,6 +547,6 @@ class CollectionResourceImplIntegrationTest {
         md.update(parts);
 
         return DatatypeConverter.printHexBinary(md.digest())
-            .toLowerCase(Locale.ROOT);
+                .toLowerCase(Locale.ROOT);
     }
 }

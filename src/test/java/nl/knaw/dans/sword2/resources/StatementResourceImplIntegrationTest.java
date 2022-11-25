@@ -21,6 +21,7 @@ import io.dropwizard.testing.junit5.DropwizardAppExtension;
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import nl.knaw.dans.sword2.DdSword2Application;
 import nl.knaw.dans.sword2.DdSword2Configuration;
+import nl.knaw.dans.sword2.TestFixture;
 import nl.knaw.dans.sword2.api.statement.Feed;
 import nl.knaw.dans.sword2.core.Deposit;
 import nl.knaw.dans.sword2.core.DepositState;
@@ -35,28 +36,28 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(DropwizardExtensionsSupport.class)
-class StatementResourceImplIntegrationTest {
-
-    private DropwizardAppExtension<DdSword2Configuration> EXT = new DropwizardAppExtension<>(
+class StatementResourceImplIntegrationTest extends TestFixture {
+    private final DropwizardAppExtension<DdSword2Configuration> EXT = new DropwizardAppExtension<>(
         DdSword2Application.class,
         ResourceHelpers.resourceFilePath("test-etc/config-regular.yml")
     );
 
     @BeforeEach
     void setUp() throws IOException {
-        FileUtils.deleteDirectory(Path.of("data/tmp").toFile());
-        new FileServiceImpl().ensureDirectoriesExist(Path.of("data/tmp/1"));
+        FileUtils.deleteDirectory(testDir.toFile());
+        new FileServiceImpl().ensureDirectoriesExist(testDir.resolve("1"));
     }
 
     @AfterEach
     void tearDown() throws IOException {
-        FileUtils.deleteDirectory(Path.of("data/tmp").toFile());
+        FileUtils.deleteDirectory(testDir.toFile());
         ((LoggerContext) org.slf4j.LoggerFactory.getILoggerFactory()).stop();
     }
 
@@ -69,7 +70,7 @@ class StatementResourceImplIntegrationTest {
         deposit.setStateDescription("Submitted");
         deposit.setDepositor("user001");
 
-        new DepositPropertiesManagerImpl().saveProperties(Path.of("data/tmp/1/deposits/a03ca6f1-608b-4247-8c22-99681b8494a0"), deposit);
+        new DepositPropertiesManagerImpl().saveProperties(testDir.resolve("1/deposits/a03ca6f1-608b-4247-8c22-99681b8494a0"), deposit);
 
         var url = String.format("http://localhost:%s/statement/a03ca6f1-608b-4247-8c22-99681b8494a0", EXT.getLocalPort());
         var response = EXT.client()
@@ -110,7 +111,7 @@ class StatementResourceImplIntegrationTest {
         deposit.setStateDescription("Submitted");
         deposit.setDepositor("user001");
 
-        new DepositPropertiesManagerImpl().saveProperties(Path.of("data/tmp/1/deposits/a03ca6f1-608b-4247-8c22-99681b8494a0/subfolder"), deposit);
+        new DepositPropertiesManagerImpl().saveProperties(testDir.resolve("/1/deposits/a03ca6f1-608b-4247-8c22-99681b8494a0/subfolder"), deposit);
 
         var url = String.format("http://localhost:%s/statement/a03ca6f1-608b-4247-8c22-99681b8494a0", EXT.getLocalPort());
         var response = EXT.client()
@@ -134,7 +135,7 @@ class StatementResourceImplIntegrationTest {
         deposit.setStateDescription("Submitted");
         deposit.setDepositor("user001");
 
-        new DepositPropertiesManagerImpl().saveProperties(Path.of("data/tmp/1/outbox/3/a03ca6f1-608b-4247-8c22-99681b8494a0"), deposit);
+        new DepositPropertiesManagerImpl().saveProperties(testDir.resolve("1/outbox/3/a03ca6f1-608b-4247-8c22-99681b8494a0"), deposit);
 
         var url = String.format("http://localhost:%s/statement/a03ca6f1-608b-4247-8c22-99681b8494a0", EXT.getLocalPort());
         var response = EXT.client()

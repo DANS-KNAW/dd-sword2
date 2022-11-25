@@ -23,6 +23,7 @@ import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.model.ZipParameters;
 import nl.knaw.dans.sword2.DdSword2Application;
 import nl.knaw.dans.sword2.DdSword2Configuration;
+import nl.knaw.dans.sword2.TestFixture;
 import nl.knaw.dans.sword2.api.entry.Entry;
 import nl.knaw.dans.sword2.core.Deposit;
 import nl.knaw.dans.sword2.core.DepositState;
@@ -50,17 +51,18 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 
 @ExtendWith(DropwizardExtensionsSupport.class)
-class CollectionResourceBagSenderIntegrationTest {
+class CollectionResourceBagSenderIntegrationTest extends TestFixture {
     private static final Logger log = LoggerFactory.getLogger(CollectionResourceBagSenderIntegrationTest.class);
 
     private static final FileService fileService = new FileServiceImpl();
     private static final ChecksumCalculator checksumCalculator = new ChecksumCalculatorImpl();
     private static final DepositPropertiesManager depositPropertiesManager = new DepositPropertiesManagerImpl();
 
-    private static final Path BASE_PATH = Path.of("data/tmp/bagsender");
+    private final Path BASE_PATH = testDir.resolve("bagsender");
 
     private final DropwizardAppExtension<DdSword2Configuration> EXT = new DropwizardAppExtension<>(
         DdSword2Application.class,
@@ -69,18 +71,12 @@ class CollectionResourceBagSenderIntegrationTest {
 
     @BeforeEach
     void startUp() throws IOException {
-        try {
-            FileUtils.deleteDirectory(BASE_PATH.toFile());
-        }
-        catch (Exception e) {
-            log.warn("Unable to delete directory");
-        }
+        FileUtils.deleteDirectory(BASE_PATH.toFile());
         fileService.ensureDirectoriesExist(BASE_PATH);
     }
 
     @AfterEach
     void tearDown() throws IOException {
-        FileUtils.deleteDirectory(BASE_PATH.toFile());
         ((LoggerContext) org.slf4j.LoggerFactory.getILoggerFactory()).stop();
     }
 

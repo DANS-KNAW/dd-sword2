@@ -25,23 +25,23 @@ sword2:
   collections:
     - name: 'collection1'
       path: '1'
-      uploads: data/tmp/1/uploads
-      deposits: data/tmp/1/deposits
+      uploads: ${TEST_DIR}/1/uploads
+      deposits: ${TEST_DIR}/1/deposits
       depositTrackingPath:
-        - data/tmp/1/outbox/1
-        - data/tmp/1/outbox/2
-        - data/tmp/1/outbox/3
+        - ${TEST_DIR}/1/outbox/1
+        - ${TEST_DIR}/1/outbox/2
+        - ${TEST_DIR}/1/outbox/3
       autoClean:
         - INVALID
       diskSpaceMargin: 2G
     - name: 'collection2'
       path: '2'
-      uploads: data/tmp/2/uploads
-      deposits: data/tmp/2/deposits
+      uploads: ${TEST_DIR}/2/uploads
+      deposits: ${TEST_DIR}/2/deposits
       depositTrackingPath:
-        - data/tmp/2/outbox/1
-        - data/tmp/2/outbox/2
-        - data/tmp/2/outbox/3
+        - ${TEST_DIR}/2/outbox/1
+        - ${TEST_DIR}/2/outbox/2
+        - ${TEST_DIR}/2/outbox/3
       autoClean:
         - INVALID
       diskSpaceMargin: 2G

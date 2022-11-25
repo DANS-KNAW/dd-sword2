@@ -21,6 +21,8 @@ import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.client.HttpClientBuilder;
+import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
+import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -68,6 +70,8 @@ public class DdSword2Application extends Application<DdSword2Configuration> {
     @Override
     public void initialize(final Bootstrap<DdSword2Configuration> bootstrap) {
         bootstrap.addBundle(new MultiPartBundle());
+        bootstrap.setConfigurationSourceProvider(new SubstitutingSourceProvider(bootstrap.getConfigurationSourceProvider(),
+                new EnvironmentVariableSubstitutor(false)));
     }
 
     @Override

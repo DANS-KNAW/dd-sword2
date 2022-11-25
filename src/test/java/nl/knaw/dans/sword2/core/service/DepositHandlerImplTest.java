@@ -15,6 +15,7 @@
  */
 package nl.knaw.dans.sword2.core.service;
 
+import nl.knaw.dans.sword2.TestFixture;
 import nl.knaw.dans.sword2.core.Deposit;
 import nl.knaw.dans.sword2.core.DepositState;
 import nl.knaw.dans.sword2.core.auth.Depositor;
@@ -41,7 +42,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-class DepositHandlerImplTest {
+class DepositHandlerImplTest extends TestFixture {
     final FileService fileService = new FileServiceImpl();
     final FilesystemSpaceVerifier filesystemSpaceVerifier = Mockito.mock(FilesystemSpaceVerifier.class);
     final ChecksumCalculator checksumCalculator = new ChecksumCalculatorImpl();
@@ -55,12 +56,7 @@ class DepositHandlerImplTest {
 
     @BeforeEach
     void beforeEach() throws IOException {
-        FileUtils.deleteDirectory(new File("data/tmp/deposithandler/"));
-    }
-
-    @AfterEach
-    void afterEach() throws IOException {
-        FileUtils.deleteDirectory(new File("data/tmp/deposithandler/"));
+        FileUtils.deleteDirectory(testDir.toFile());
     }
 
     Path createDepositFrom(String name, String id, DepositState state) throws IOException, InvalidDepositException {
@@ -69,8 +65,8 @@ class DepositHandlerImplTest {
         assert p != null;
         var path = Path.of(p.getPath());
 
-        fileService.ensureDirectoriesExist(Path.of("data/tmp/deposithandler/uploads", id));
-        fileService.ensureDirectoriesExist(Path.of("data/tmp/deposithandler/deposits"));
+        fileService.ensureDirectoriesExist(testDir.resolve("uploads").resolve(id));
+        fileService.ensureDirectoriesExist(testDir.resolve("deposits"));
 
         var deposit = new Deposit();
         deposit.setId(id);
@@ -84,9 +80,9 @@ class DepositHandlerImplTest {
 
         // now store these properties
         // set state to draft
-        depositPropertiesManager.saveProperties(Path.of("data/tmp/deposithandler/uploads/testid"), deposit);
+        depositPropertiesManager.saveProperties(testDir.resolve("uploads/testid"), deposit);
 
-        fileService.copyFile(path, Path.of("data/tmp/deposithandler/uploads", id, name));
+        fileService.copyFile(path,testDir.resolve("uploads").resolve(id).resolve(name));
 
         return path;
     }
@@ -97,8 +93,8 @@ class DepositHandlerImplTest {
         var collectionConfig = new CollectionConfig();
         collectionConfig.setName("collection1");
         collectionConfig.setPath("6");
-        collectionConfig.setUploads(Path.of("data/tmp/deposithandler/uploads"));
-        collectionConfig.setDeposits(Path.of("data/tmp/deposithandler/deposits"));
+        collectionConfig.setUploads(testDir.resolve("uploads"));
+        collectionConfig.setDeposits(testDir.resolve("deposits"));
         config.setCollections(List.of(collectionConfig));
 
         var depositor = new Depositor();
@@ -119,7 +115,7 @@ class DepositHandlerImplTest {
 
         depositHandler.finalizeDeposit("testid");
 
-        var deposit = depositPropertiesManager.getProperties(Path.of("data/tmp/deposithandler/deposits/testid"));
+        var deposit = depositPropertiesManager.getProperties(testDir.resolve("deposits/testid"));
 
         Assertions.assertEquals("audiences", deposit.getBagName());
         Assertions.assertEquals("sword:testid", deposit.getSwordToken());

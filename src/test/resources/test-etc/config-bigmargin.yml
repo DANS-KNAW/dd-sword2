@@ -26,10 +26,10 @@ sword2:
   collections:
     - name: 'collection1'
       path: '1'
-      uploads: data/tmp/1/uploads
-      deposits: data/tmp/1/deposits
+      uploads: target/test/CollectionResourceLimitedDiskSpaceIntegrationTest/1/uploads
+      deposits: target/test/CollectionResourceLimitedDiskSpaceIntegrationTest/1/deposits
       depositTrackingPath:
-        - data/tmp/1/outbox/failed
+        - target/test/CollectionResourceLimitedDiskSpaceIntegrationTest/outbox/failed
       autoClean:
         - REJECTED
       diskSpaceMargin: 200000G

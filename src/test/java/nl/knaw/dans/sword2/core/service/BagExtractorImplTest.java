@@ -15,6 +15,7 @@
  */
 package nl.knaw.dans.sword2.core.service;
 
+import nl.knaw.dans.sword2.TestFixture;
 import nl.knaw.dans.sword2.core.exceptions.InvalidDepositException;
 import nl.knaw.dans.sword2.core.exceptions.InvalidPartialFileException;
 import nl.knaw.dans.sword2.core.exceptions.NotEnoughDiskSpaceException;
@@ -41,11 +42,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class BagExtractorImplTest {
+class BagExtractorImplTest extends TestFixture {
+
 
     private final FileService fileService = new FileServiceImpl();
     private final ZipService zipService = new ZipServiceImpl(fileService);
-    private final Path testPath = Path.of("data/tmp/bagextractor/");
+    private final Path testPath = testDir.resolve("bagextractor/");
     private final BagItManager bagItManager = Mockito.mock(BagItManager.class);
     private final ChecksumCalculator checksumCalculator = new ChecksumCalculatorImpl();
     private final FilesystemSpaceVerifier filesystemSpaceVerifier = Mockito.mock(FilesystemSpaceVerifier.class);
