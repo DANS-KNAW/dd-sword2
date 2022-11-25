@@ -23,14 +23,22 @@ import org.apache.commons.text.StringSubstitutor;
 
 import java.util.Collections;
 
+/**
+ * Fixture for integration tests that run the whole dropwizard app using the DropwizardAppExtension.
+ */
 public abstract class TestFixtureExt extends TestFixture {
 
     protected final DropwizardAppExtension<DdSword2Configuration> EXT;
 
+    /**
+     * Initializes the app with the giving config.yml. The variable <code>${TEST_DIR}</code> can be used in config.yml to resolve to <code>testDir</code>.
+     *
+     * @param configYml the config.yml to use
+     */
     protected TestFixtureExt(String configYml) {
         EXT = new DropwizardAppExtension<>(
             DdSword2Application.class,
             ResourceHelpers.resourceFilePath(configYml),
             new SubstitutingSourceProvider(new FileConfigurationSourceProvider(), new StringSubstitutor(Collections.singletonMap("TEST_DIR", testDir.toString()))));
-           }
+    }
 }

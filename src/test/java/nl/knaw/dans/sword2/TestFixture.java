@@ -18,8 +18,15 @@ package nl.knaw.dans.sword2;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Each test class has a workspace under
+ * <pre>
+ *     target/test/<test-class-name>/
+ * </pre>
+ *
+ * This fixture makes sure that the field <code>testDir</code> is initialized to point to that directory. Subclasses are responsible for initializing the actual directory.
+ */
 public abstract class TestFixture {
 
     protected Path testDir = Paths.get("target/test", getClass().getSimpleName());
-
 }
