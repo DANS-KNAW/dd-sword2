@@ -26,10 +26,10 @@ sword2:
   collections:
     - name: 'collection1'
       path: '1'
-      uploads: $TEST_DIR/bagsender/uploads
-      deposits: $TEST_DIR/bagsender/deposits
+      uploads: ${TEST_DIR}/bagsender/uploads
+      deposits: ${TEST_DIR}/bagsender/deposits
       depositTrackingPath:
-        - $TEST_DIR/bagsender/outbox/failed
+        - ${TEST_DIR}/bagsender/outbox/failed
       autoClean:
         - REJECTED
         - INVALID

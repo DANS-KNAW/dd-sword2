@@ -27,19 +27,19 @@ sword2:
   collections:
     - name: 'collection1'
       path: '1'
-      uploads: $TEST_DIR/1/uploads
-      deposits: $TEST_DIR/1/deposits
+      uploads: ${TEST_DIR}/1/uploads
+      deposits: ${TEST_DIR}/1/deposits
       depositTrackingPath:
-        - $TEST_DIR/outbox/failed
+        - ${TEST_DIR}/outbox/failed
       autoClean:
         - REJECTED
       diskSpaceMargin: 2G
     - name: 'collection2'
       path: '2'
-      uploads: $TEST_DIR/2/uploads
-      deposits: $TEST_DIR/2/deposits
+      uploads: ${TEST_DIR}/2/uploads
+      deposits: ${TEST_DIR}/2/deposits
       depositTrackingPath:
-        - $TEST_DIR/outbox/failed
+        - ${TEST_DIR}/outbox/failed
       autoClean:
         - REJECTED
       diskSpaceMargin: 2G
