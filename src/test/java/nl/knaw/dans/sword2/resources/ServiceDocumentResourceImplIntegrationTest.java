@@ -21,6 +21,7 @@ import io.dropwizard.testing.junit5.DropwizardAppExtension;
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import nl.knaw.dans.sword2.DdSword2Application;
 import nl.knaw.dans.sword2.DdSword2Configuration;
+import nl.knaw.dans.sword2.TestFixtureExt;
 import nl.knaw.dans.sword2.api.service.ServiceDocument;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -33,12 +34,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @ExtendWith(DropwizardExtensionsSupport.class)
-class ServiceDocumentResourceImplIntegrationTest {
+class ServiceDocumentResourceImplIntegrationTest extends TestFixtureExt {
 
-    private DropwizardAppExtension<DdSword2Configuration> EXT = new DropwizardAppExtension<>(
-        DdSword2Application.class,
-        ResourceHelpers.resourceFilePath("test-etc/config-servicedocument.yml")
-    );
+    public ServiceDocumentResourceImplIntegrationTest() {
+        super("test-etc/config-servicedocument.yml");
+    }
 
     @AfterEach
     void tearDown() {

@@ -22,6 +22,7 @@ import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import nl.knaw.dans.sword2.DdSword2Application;
 import nl.knaw.dans.sword2.DdSword2Configuration;
 import nl.knaw.dans.sword2.TestFixture;
+import nl.knaw.dans.sword2.TestFixtureExt;
 import nl.knaw.dans.sword2.core.service.FileServiceImpl;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -40,11 +41,10 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(DropwizardExtensionsSupport.class)
-class CollectionResourceLimitedDiskSpaceIntegrationTest extends TestFixture {
-    private final DropwizardAppExtension<DdSword2Configuration> EXT = new DropwizardAppExtension<>(
-        DdSword2Application.class,
-        ResourceHelpers.resourceFilePath("test-etc/config-bigmargin.yml")
-    );
+class CollectionResourceLimitedDiskSpaceIntegrationTest extends TestFixtureExt {
+    public CollectionResourceLimitedDiskSpaceIntegrationTest() {
+        super("test-etc/config-bigmargin.yml");
+    }
 
     @BeforeEach
     void startUp() throws IOException {
@@ -52,8 +52,8 @@ class CollectionResourceLimitedDiskSpaceIntegrationTest extends TestFixture {
     }
 
     @AfterEach
-    void tearDown() throws IOException {
-        ((LoggerContext)org.slf4j.LoggerFactory.getILoggerFactory()).stop();
+    void tearDown() {
+        ((LoggerContext) org.slf4j.LoggerFactory.getILoggerFactory()).stop();
     }
 
     @Test

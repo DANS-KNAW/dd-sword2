@@ -24,6 +24,7 @@ import net.lingala.zip4j.model.ZipParameters;
 import nl.knaw.dans.sword2.DdSword2Application;
 import nl.knaw.dans.sword2.DdSword2Configuration;
 import nl.knaw.dans.sword2.TestFixture;
+import nl.knaw.dans.sword2.TestFixtureExt;
 import nl.knaw.dans.sword2.api.entry.Entry;
 import nl.knaw.dans.sword2.core.Deposit;
 import nl.knaw.dans.sword2.core.DepositState;
@@ -55,7 +56,7 @@ import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 
 @ExtendWith(DropwizardExtensionsSupport.class)
-class CollectionResourceBagSenderIntegrationTest extends TestFixture {
+class CollectionResourceBagSenderIntegrationTest extends TestFixtureExt {
     private static final Logger log = LoggerFactory.getLogger(CollectionResourceBagSenderIntegrationTest.class);
 
     private static final FileService fileService = new FileServiceImpl();
@@ -64,10 +65,9 @@ class CollectionResourceBagSenderIntegrationTest extends TestFixture {
 
     private final Path BASE_PATH = testDir.resolve("bagsender");
 
-    private final DropwizardAppExtension<DdSword2Configuration> EXT = new DropwizardAppExtension<>(
-        DdSword2Application.class,
-        ResourceHelpers.resourceFilePath("test-etc/config-bagsender.yml")
-    );
+    public CollectionResourceBagSenderIntegrationTest() {
+        super("test-etc/config-bagsender.yml");
+    }
 
     @BeforeEach
     void startUp() throws IOException {
@@ -76,7 +76,7 @@ class CollectionResourceBagSenderIntegrationTest extends TestFixture {
     }
 
     @AfterEach
-    void tearDown() throws IOException {
+    void tearDown() {
         ((LoggerContext) org.slf4j.LoggerFactory.getILoggerFactory()).stop();
     }
 

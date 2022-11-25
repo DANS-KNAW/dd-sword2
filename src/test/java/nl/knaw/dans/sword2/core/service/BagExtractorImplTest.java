@@ -44,7 +44,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BagExtractorImplTest extends TestFixture {
 
-
     private final FileService fileService = new FileServiceImpl();
     private final ZipService zipService = new ZipServiceImpl(fileService);
     private final Path testPath = testDir.resolve("bagextractor/");

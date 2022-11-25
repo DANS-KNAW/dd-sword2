@@ -26,10 +26,10 @@ sword2:
   collections:
     - name: 'collection1'
       path: '1'
-      uploads: target/test/CollectionResourceBagSenderIntegrationTest/bagsender/uploads
-      deposits: target/test/CollectionResourceBagSenderIntegrationTest/bagsender/deposits
+      uploads: $TEST_DIR/bagsender/uploads
+      deposits: $TEST_DIR/bagsender/deposits
       depositTrackingPath:
-        - target/test/CollectionResourceBagSenderIntegrationTest/bagsender/outbox/failed
+        - $TEST_DIR/bagsender/outbox/failed
       autoClean:
         - REJECTED
         - INVALID
