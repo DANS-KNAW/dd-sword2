@@ -15,7 +15,7 @@
  */
 package nl.knaw.dans.sword2.resources;
 
-import nl.knaw.dans.sword2.core.config.UriRegistry;
+import nl.knaw.dans.sword2.core.config.SwordError;
 import nl.knaw.dans.sword2.core.auth.Depositor;
 import nl.knaw.dans.sword2.core.exceptions.CollectionNotFoundException;
 import nl.knaw.dans.sword2.core.exceptions.DepositNotFoundException;
@@ -116,9 +116,9 @@ public class ContainerResourceImpl extends BaseResource implements ContainerReso
             var packaging = getPackaging(headers.getHeaderString("packaging"));
 
             var filename = getParameterValueFromContentDisposition(contentDisposition, "filename");
-            var filesize = getContentLength(headers.getHeaderString("content-length"));
+            var fileSize = getContentLength(headers.getHeaderString("content-length"));
 
-            var deposit = depositHandler.addPayloadToDeposit(depositId, depositor, inProgress, contentType, md5, packaging, filename, filesize, inputStream);
+            var deposit = depositHandler.addPayloadToDeposit(depositId, depositor, inProgress, contentType, md5, packaging, filename, fileSize, inputStream);
             var entry = depositReceiptFactory.createDepositReceipt(deposit);
             var location = depositReceiptFactory.getDepositLocation(deposit);
 
@@ -130,20 +130,20 @@ public class ContainerResourceImpl extends BaseResource implements ContainerReso
                 .build();
         }
         catch (IOException e) {
-            log.error("An IOException occured while processing the request for deposit with ID {}", depositId, e);
-            return buildSwordErrorResponse(UriRegistry.ERROR_BAD_REQUEST, e.getMessage());
+            log.error("An IOException occurred while processing the request for deposit with ID {}", depositId, e);
+            return buildSwordErrorResponse(SwordError.ERROR_BAD_REQUEST, e.getMessage());
         }
         catch (InvalidHeaderException e) {
             log.error("An invalid header was received while processing the request for deposit with ID {}", depositId, e);
-            return buildSwordErrorResponse(UriRegistry.ERROR_BAD_REQUEST, e.getMessage());
+            return buildSwordErrorResponse(SwordError.ERROR_BAD_REQUEST, e.getMessage());
         }
         catch (CollectionNotFoundException | DepositReadOnlyException e) {
             log.error("The deposit with ID {} is read-only", depositId, e);
-            return buildSwordErrorResponse(UriRegistry.ERROR_METHOD_NOT_ALLOWED, e.getMessage());
+            return buildSwordErrorResponse(SwordError.ERROR_METHOD_NOT_ALLOWED, e.getMessage());
         }
         catch (HashMismatchException e) {
             log.error("The content has a different checksum than the one provided for deposit with ID {}", depositId, e);
-            return buildSwordErrorResponse(UriRegistry.ERROR_CHECKSUM_MISMATCH);
+            return buildSwordErrorResponse(SwordError.ERROR_CHECKSUM_MISMATCH);
         }
         catch (NotEnoughDiskSpaceException e) {
             log.error("The content could not be stored due to insufficient disk space, for deposit with ID {}", depositId, e);

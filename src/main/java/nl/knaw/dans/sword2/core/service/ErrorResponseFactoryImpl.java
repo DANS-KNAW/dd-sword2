@@ -15,50 +15,30 @@
  */
 package nl.knaw.dans.sword2.core.service;
 
-import nl.knaw.dans.sword2.core.config.UriRegistry;
+import nl.knaw.dans.sword2.core.config.SwordError;
 import nl.knaw.dans.sword2.api.error.Error;
 import nl.knaw.dans.sword2.api.error.Generator;
 
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ErrorResponseFactoryImpl implements ErrorResponseFactory {
     private final DateTimeFormatter errorDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
-    private final Map<String, Integer> errorMap;
-
-    public ErrorResponseFactoryImpl() {
-        this.errorMap = new HashMap<>();
-
-        // set up the error codes mapping (copied from easy-sword2-lib)
-        errorMap.put(UriRegistry.ERROR_BAD_REQUEST, 400); // bad request
-        errorMap.put(UriRegistry.ERROR_CHECKSUM_MISMATCH, 412); // precondition failed
-        errorMap.put(UriRegistry.ERROR_CONTENT, 415); // unsupported media type
-        errorMap.put(UriRegistry.ERROR_MEDIATION_NOT_ALLOWED, 412); // precondition failed
-        errorMap.put(UriRegistry.ERROR_METHOD_NOT_ALLOWED, 405); // method not allowed
-        errorMap.put(UriRegistry.ERROR_TARGET_OWNER_UNKNOWN, 403); // forbidden
-        errorMap.put(UriRegistry.ERROR_MAX_UPLOAD_SIZE_EXCEEDED, 413); // forbidden
-
-    }
-
     @Override
-    public ErrorResponse buildSwordErrorResponse(String errorCode) {
+    public ErrorResponse buildSwordErrorResponse(SwordError errorCode) {
         return buildSwordErrorResponse(errorCode, null);
     }
 
     @Override
-    public ErrorResponse buildSwordErrorResponse(String errorCode, String errorMessage) {
+    public ErrorResponse buildSwordErrorResponse(SwordError errorCode, String errorMessage) {
         var errorDocument = new Error();
         errorDocument.setTitle("ERROR");
         errorDocument.setTreatment("Processing failed");
         errorDocument.setGenerator(new Generator(URI.create("http://www.swordapp.org/"), "2.0"));
-        errorDocument.setSummary(errorMessage == null ? errorCode : errorMessage);
+        errorDocument.setSummary(errorMessage == null ? errorCode.getSummaryText() : errorMessage);
         errorDocument.setUpdated(OffsetDateTime.now().format(errorDateTimeFormatter));
 
-        var statusCode = errorMap.getOrDefault(errorCode, 400);
-
-        return new ErrorResponse(errorDocument, statusCode);
+        return new ErrorResponse(errorDocument, errorCode.getStatusCode());
     }
 }

@@ -19,6 +19,7 @@ import nl.knaw.dans.sword2.api.error.Generator;
 import nl.knaw.dans.sword2.api.statement.Feed;
 import nl.knaw.dans.sword2.api.statement.FeedEntry;
 import nl.knaw.dans.sword2.core.auth.Depositor;
+import nl.knaw.dans.sword2.core.config.SwordError;
 import nl.knaw.dans.sword2.core.config.UriRegistry;
 import nl.knaw.dans.sword2.core.exceptions.CollectionNotFoundException;
 import nl.knaw.dans.sword2.core.exceptions.HashMismatchException;
@@ -60,12 +61,12 @@ public class CollectionResourceImpl extends BaseResource implements CollectionRe
 
     @Override
     public Response depositMultipart(MultiPart multiPart, String collectionId, HttpHeaders headers, Depositor depositor) {
-        return buildSwordErrorResponse(UriRegistry.ERROR_METHOD_NOT_ALLOWED);
+        return buildSwordErrorResponse(SwordError.ERROR_METHOD_NOT_ALLOWED);
     }
 
     @Override
     public Response depositAtom(String collectionId, HttpHeaders headers, Depositor depositor) {
-        return buildSwordErrorResponse(UriRegistry.ERROR_METHOD_NOT_ALLOWED);
+        return buildSwordErrorResponse(SwordError.ERROR_METHOD_NOT_ALLOWED);
     }
 
     @Override
@@ -85,9 +86,9 @@ public class CollectionResourceImpl extends BaseResource implements CollectionRe
                 throw new InvalidHeaderException("Content-Disposition header is missing or has an invalid 'filename' parameter");
             }
 
-            var filesize = getContentLength(headers.getHeaderString("content-length"));
+            var fileSize = getContentLength(headers.getHeaderString("content-length"));
 
-            var deposit = depositHandler.createDepositWithPayload(collectionId, depositor, inProgress, contentType, md5, packaging, filename, filesize, inputStream);
+            var deposit = depositHandler.createDepositWithPayload(collectionId, depositor, inProgress, contentType, md5, packaging, filename, fileSize, inputStream);
 
             var entry = depositReceiptFactory.createDepositReceipt(deposit);
 
@@ -99,13 +100,13 @@ public class CollectionResourceImpl extends BaseResource implements CollectionRe
 
         }
         catch (IOException | InvalidHeaderException | InvalidDepositException e) {
-            return buildSwordErrorResponse(UriRegistry.ERROR_BAD_REQUEST, e.getMessage());
+            return buildSwordErrorResponse(SwordError.ERROR_BAD_REQUEST, e.getMessage());
         }
         catch (CollectionNotFoundException e) {
-            return buildSwordErrorResponse(UriRegistry.ERROR_METHOD_NOT_ALLOWED, e.getMessage());
+            return buildSwordErrorResponse(SwordError.ERROR_METHOD_NOT_ALLOWED, e.getMessage());
         }
         catch (HashMismatchException e) {
-            return buildSwordErrorResponse(UriRegistry.ERROR_CHECKSUM_MISMATCH);
+            return buildSwordErrorResponse(SwordError.ERROR_CHECKSUM_MISMATCH);
         }
         catch (NotEnoughDiskSpaceException e) {
             throw new WebApplicationException(503);

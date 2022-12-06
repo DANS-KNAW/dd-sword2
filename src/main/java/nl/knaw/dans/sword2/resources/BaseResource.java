@@ -15,6 +15,7 @@
  */
 package nl.knaw.dans.sword2.resources;
 
+import nl.knaw.dans.sword2.core.config.SwordError;
 import nl.knaw.dans.sword2.core.config.UriRegistry;
 import nl.knaw.dans.sword2.core.exceptions.InvalidHeaderException;
 import nl.knaw.dans.sword2.core.service.ErrorResponseFactory;
@@ -37,11 +38,11 @@ public class BaseResource {
         this.errorResponseFactory = errorResponseFactory;
     }
 
-    Response buildSwordErrorResponse(String errorCode) {
+    Response buildSwordErrorResponse(SwordError errorCode) {
         return buildSwordErrorResponse(errorCode, null);
     }
 
-    Response buildSwordErrorResponse(String errorCode, String errorMessage) {
+    Response buildSwordErrorResponse(SwordError errorCode, String errorMessage) {
         var errorResponse = errorResponseFactory.buildSwordErrorResponse(errorCode, errorMessage);
 
         return Response.status(errorResponse.getCode())

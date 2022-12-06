@@ -16,12 +16,13 @@
 package nl.knaw.dans.sword2.core.service;
 
 import nl.knaw.dans.sword2.api.error.Error;
+import nl.knaw.dans.sword2.core.config.SwordError;
 
 public interface ErrorResponseFactory {
 
-    ErrorResponse buildSwordErrorResponse(String errorCode);
+    ErrorResponse buildSwordErrorResponse(SwordError errorCode);
 
-    ErrorResponse buildSwordErrorResponse(String errorCode, String errorMessage);
+    ErrorResponse buildSwordErrorResponse(SwordError errorCode, String errorMessage);
 
     class ErrorResponse {
         private Error error;

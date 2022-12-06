@@ -64,12 +64,4 @@ public class UriRegistry {
     public static String PACKAGE_BINARY = "http://purl.org/net/sword/package/Binary";
     public static String PACKAGE_BAGIT = "http://purl.org/net/sword/package/BagIt";
 
-    // Error Codes
-    public static String ERROR_BAD_REQUEST = "http://purl.org/net/sword/error/ErrorBadRequest";
-    public static String ERROR_CONTENT = "http://purl.org/net/sword/error/ErrorContent";
-    public static String ERROR_CHECKSUM_MISMATCH = "http://purl.org/net/sword/error/ErrorChecksumMismatch";
-    public static String ERROR_TARGET_OWNER_UNKNOWN = "http://purl.org/net/sword/error/TargetOwnerUnknown";
-    public static String ERROR_MEDIATION_NOT_ALLOWED = "http://purl.org/net/sword/error/MediationNotAllowed";
-    public static String ERROR_METHOD_NOT_ALLOWED = "http://purl.org/net/sword/error/MethodNotAllowed";
-    public static String ERROR_MAX_UPLOAD_SIZE_EXCEEDED = "http://purl.org/net/sword/error/MaxUploadSizeExceeded";
 }
