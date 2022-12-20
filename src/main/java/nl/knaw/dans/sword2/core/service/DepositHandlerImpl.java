@@ -15,9 +15,9 @@
  */
 package nl.knaw.dans.sword2.core.service;
 
-import nl.knaw.dans.sword2.core.auth.Depositor;
 import nl.knaw.dans.sword2.core.Deposit;
 import nl.knaw.dans.sword2.core.DepositState;
+import nl.knaw.dans.sword2.core.auth.Depositor;
 import nl.knaw.dans.sword2.core.config.CollectionConfig;
 import nl.knaw.dans.sword2.core.exceptions.CollectionNotFoundException;
 import nl.knaw.dans.sword2.core.exceptions.DepositNotFoundException;
@@ -303,11 +303,11 @@ public class DepositHandlerImpl implements DepositHandler {
 
             return deposit;
         }
-        catch (InvalidDepositException e) {
+        catch (InvalidDepositException | InvalidPartialFileException e) {
             setDepositToInvalid(depositId, e.getMessage());
             throw e;
         }
-        catch (InvalidPartialFileException | CollectionNotFoundException e) {
+        catch (CollectionNotFoundException e) {
             setDepositToFailed(depositId, getGenericErrorMessage(depositId));
             throw e;
         }

@@ -75,7 +75,6 @@ public class CollectionResourceImpl extends BaseResource implements CollectionRe
         try {
             var contentType = getContentType(headers.getHeaderString("content-type"));
             var inProgress = getInProgress(headers.getHeaderString("in-progress"));
-
             var contentDisposition = headers.getHeaderString("content-disposition");
             var md5 = headers.getHeaderString("content-md5");
             var packaging = getPackaging(headers.getHeaderString("packaging"));

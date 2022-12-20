@@ -161,7 +161,8 @@ public class BagItManagerImpl implements BagItManager {
             verifier.isValid(bag, ignoreHiddenFiles);
         }
         catch (Exception e) {
-            throw new InvalidDepositException(e.getMessage(), e);
+            // not only the exception message (e.g. a file path) but also the exception class (e.g. FileNotFoundException)
+            throw new InvalidDepositException(e.toString(), e);
         }
     }
 

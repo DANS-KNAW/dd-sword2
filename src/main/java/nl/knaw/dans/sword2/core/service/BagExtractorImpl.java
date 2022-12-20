@@ -88,22 +88,23 @@ public class BagExtractorImpl implements BagExtractor {
 
     int getSequenceNumber(Path path) throws InvalidPartialFileException {
         var parts = path.getFileName().toString().split("\\.");
+        var fileName = path.getFileName();
 
         if (parts.length <= 1) {
-            throw new InvalidPartialFileException(String.format("Partial file %s has no extension. It should be a positive sequence number.", path));
+            throw new InvalidPartialFileException(String.format("Partial file %s has no extension. It should be a positive sequence number.", fileName));
         }
 
         try {
             var value = Integer.parseInt(parts[parts.length - 1], 10);
 
             if (value <= 0) {
-                throw new InvalidPartialFileException(String.format("Partial file %s has an incorrect extension. It should be a positive sequence number (> 0), but was: %s", path, value));
+                throw new InvalidPartialFileException(String.format("Partial file %s has an incorrect extension. It should be a positive sequence number (> 0), but was: %s", fileName, value));
             }
 
             return value;
         }
         catch (NumberFormatException e) {
-            throw new InvalidPartialFileException(String.format("Partial file %s has an incorrect extension. Should be a positive sequence number.", path));
+            throw new InvalidPartialFileException(String.format("Partial file %s has an incorrect extension. Should be a positive sequence number.", fileName));
         }
     }
 

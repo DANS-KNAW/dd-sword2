@@ -247,7 +247,7 @@ class BagExtractorImplTest extends TestFixture {
     }
 
     @Test
-    void testIncorrectNumberZero() throws InvalidPartialFileException {
+    void testIncorrectNumberZero() {
         var path = Path.of("test.0");
         assertThrows(InvalidPartialFileException.class, () -> new BagExtractorImpl(zipService, fileService, bagItManager, filesystemSpaceVerifier).getSequenceNumber(path));
     }
@@ -262,6 +262,15 @@ class BagExtractorImplTest extends TestFixture {
     void testNonNumericalExtension() throws InvalidPartialFileException {
         var path = Path.of("test.zip1");
         assertThrows(InvalidPartialFileException.class, () -> new BagExtractorImpl(zipService, fileService, bagItManager, filesystemSpaceVerifier).getSequenceNumber(path));
+    }
+
+    @Test
+    void getSequenceNumber_should_throw_error_with_00_suffix() throws InvalidPartialFileException {
+        var path = Path.of("test.zip.00");
+        var e = assertThrows(InvalidPartialFileException.class,
+            () -> new BagExtractorImpl(zipService, fileService, bagItManager, filesystemSpaceVerifier).getSequenceNumber(path));
+
+        assertTrue(e.getMessage().contains("It should be a positive sequence number (> 0)"));
     }
 
     @Test
