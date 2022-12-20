@@ -17,7 +17,7 @@
 @XmlSchema(namespace = "http://www.w3.org/2005/Atom",
         elementFormDefault = XmlNsForm.QUALIFIED,
         xmlns = {@XmlNs(prefix = "", namespaceURI = "http://www.w3.org/2005/Atom"),
-            @XmlNs(prefix = "sword", namespaceURI = "http://purl.org/net/sword/terms/")})
+            @XmlNs(prefix = "sword", namespaceURI = "http://purl.org/net/sword/")})
 package nl.knaw.dans.sword2.api.error;
 
 import javax.xml.bind.annotation.XmlNs;

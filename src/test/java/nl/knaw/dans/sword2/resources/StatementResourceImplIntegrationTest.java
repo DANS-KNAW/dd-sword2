@@ -89,7 +89,7 @@ class StatementResourceImplIntegrationTest extends TestFixtureExt {
         assertEquals("SUBMITTED", feed.getCategory().getTerm());
 
         var hash = response.getHeaderString("content-md5");
-        assertEquals("30d203e2d0c5e349921a8317f66b759b", hash);
+        assertEquals("415dd6ceb5fdf42e8245b1a70e0bd407"/*ALI "30d203e2d0c5e349921a8317f66b759b"*/, hash);
     }
 
     @Test
@@ -151,6 +151,6 @@ class StatementResourceImplIntegrationTest extends TestFixtureExt {
         assertEquals("SUBMITTED", feed.getCategory().getTerm());
 
         var hash = response.getHeaderString("content-md5");
-        assertEquals("30d203e2d0c5e349921a8317f66b759b", hash);
+        assertEquals("415dd6ceb5fdf42e8245b1a70e0bd407"/*ALI "30d203e2d0c5e349921a8317f66b759b */, hash);
     }
 }

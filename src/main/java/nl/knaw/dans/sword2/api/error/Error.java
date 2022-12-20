@@ -16,13 +16,15 @@
 
 package nl.knaw.dans.sword2.api.error;
 
+import nl.knaw.dans.sword2.core.config.SwordError;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-
-@XmlRootElement(name = "error", namespace = "http://purl.org/net/sword/terms/")
+@XmlRootElement(name = "error", namespace = "http://purl.org/net/sword/")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Error {
 
@@ -32,12 +34,23 @@ public class Error {
     private String updated;
     @XmlElement(namespace = "http://www.w3.org/2005/Atom")
     private Generator generator;
-    @XmlElement(namespace = "http://purl.org/net/sword/terms/")
+    @XmlElement(namespace = "http://purl.org/net/sword/")
     private String treatment;
     @XmlElement(namespace = "http://www.w3.org/2005/Atom")
     private String summary;
-    @XmlElement(namespace = "http://purl.org/net/sword/terms/")
+    @XmlElement(namespace = "http://purl.org/net/sword/")
     private String verboseDescription;
+
+    @XmlAttribute(name="href", required = true)
+    private SwordError errorCode;
+
+    public SwordError getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(SwordError errorCode) {
+        this.errorCode = errorCode;
+    }
 
     public String getVerboseDescription() {
         return verboseDescription;

@@ -33,6 +33,7 @@ public class ErrorResponseFactoryImpl implements ErrorResponseFactory {
     @Override
     public ErrorResponse buildSwordErrorResponse(SwordError errorCode, String errorMessage) {
         var errorDocument = new Error();
+        errorDocument.setErrorCode(errorCode);
         errorDocument.setTitle("ERROR");
         errorDocument.setTreatment("Processing failed");
         errorDocument.setGenerator(new Generator(URI.create("http://www.swordapp.org/"), "2.0"));
