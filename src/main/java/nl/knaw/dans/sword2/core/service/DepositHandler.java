@@ -21,8 +21,10 @@ import nl.knaw.dans.sword2.core.exceptions.CollectionNotFoundException;
 import nl.knaw.dans.sword2.core.exceptions.DepositNotFoundException;
 import nl.knaw.dans.sword2.core.exceptions.DepositReadOnlyException;
 import nl.knaw.dans.sword2.core.exceptions.HashMismatchException;
+import nl.knaw.dans.sword2.core.exceptions.InvalidContentTypeException;
 import nl.knaw.dans.sword2.core.exceptions.InvalidDepositException;
 import nl.knaw.dans.sword2.core.exceptions.InvalidPartialFileException;
+import nl.knaw.dans.sword2.core.exceptions.InvalidSupportedBagPackagingException;
 import nl.knaw.dans.sword2.core.exceptions.NotEnoughDiskSpaceException;
 
 import javax.ws.rs.core.MediaType;
@@ -40,7 +42,7 @@ public interface DepositHandler {
 
     Deposit createDepositWithPayload(String collectionId, Depositor depositor, boolean inProgress, MediaType contentType, String hash, String packaging, String filename, long filesize,
         InputStream inputStream)
-        throws CollectionNotFoundException, IOException, NotEnoughDiskSpaceException, HashMismatchException, InvalidDepositException;
+        throws CollectionNotFoundException, IOException, NotEnoughDiskSpaceException, HashMismatchException, InvalidDepositException, InvalidSupportedBagPackagingException, InvalidContentTypeException;
 
     Deposit addPayloadToDeposit(String depositId, Depositor depositor, boolean inProgress, MediaType contentType, String hash, String packaging, String filename, long filesize,
         InputStream inputStream)

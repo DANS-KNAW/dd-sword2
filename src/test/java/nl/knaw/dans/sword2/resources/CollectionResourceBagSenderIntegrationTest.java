@@ -283,6 +283,7 @@ class CollectionResourceBagSenderIntegrationTest extends TestFixtureExt {
             .header("content-md5", checksum)
             .header("content-disposition", "attachment; filename=bag.zip")
             .header("in-progress", "false")
+            .header("Packaging", "http://purl.org/net/sword/package/BagIt")
             .header("authorization", "Basic dXNlcjAwMTp1c2VyMDAx")
             .header("accept", "application/atom+xml;type=feed")
             .post(Entity.entity(is, MediaType.valueOf("application/zip")));

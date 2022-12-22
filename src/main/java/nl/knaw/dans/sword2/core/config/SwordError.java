@@ -31,10 +31,10 @@ public enum SwordError {
     ERROR_METHOD_NOT_ALLOWED("Request method is not allowed",
         405),
     @XmlEnumValue("http://purl.org/net/sword/error/ErrorContent")
-    ERROR_CONTENT_NOT_ACCEPTABLE("The supplied format is not the same as that identified in the packaging header that supported by the server",
+    ERROR_CONTENT_NOT_ACCEPTABLE("The supplied media type is not the same as that supported by the server",
         406),
     @XmlEnumValue("http://purl.org/net/sword/error/ErrorContent")
-    ERROR_CONTENT_UNSUPPORTED_MEDIA_TYPE("The supplied media type is not the same as that supported by the server",
+    ERROR_CONTENT_UNSUPPORTED_MEDIA_TYPE("The supplied packaging header is not supported by the server",
         415),
     @XmlEnumValue("http://purl.org/net/sword/error/ErrorChecksumMismatch")
     ERROR_CHECKSUM_MISMATCH("Checksum sent does not match the calculated checksum",

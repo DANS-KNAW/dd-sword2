@@ -68,7 +68,7 @@ public class BaseResource {
 
     String getPackaging(String header) {
         if (header == null) {
-            return UriRegistry.PACKAGE_BINARY;
+            return UriRegistry.PACKAGE_BAGIT;
         }
 
         return header;

@@ -23,8 +23,10 @@ import nl.knaw.dans.sword2.core.config.SwordError;
 import nl.knaw.dans.sword2.core.config.UriRegistry;
 import nl.knaw.dans.sword2.core.exceptions.CollectionNotFoundException;
 import nl.knaw.dans.sword2.core.exceptions.HashMismatchException;
+import nl.knaw.dans.sword2.core.exceptions.InvalidContentTypeException;
 import nl.knaw.dans.sword2.core.exceptions.InvalidDepositException;
 import nl.knaw.dans.sword2.core.exceptions.InvalidHeaderException;
+import nl.knaw.dans.sword2.core.exceptions.InvalidSupportedBagPackagingException;
 import nl.knaw.dans.sword2.core.exceptions.NotEnoughDiskSpaceException;
 import nl.knaw.dans.sword2.core.service.DepositHandler;
 import nl.knaw.dans.sword2.core.service.DepositReceiptFactory;
@@ -33,6 +35,7 @@ import org.glassfish.jersey.media.multipart.MultiPart;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,7 +76,7 @@ public class CollectionResourceImpl extends BaseResource implements CollectionRe
     public Response depositAnything(InputStream inputStream, String collectionId, HttpHeaders headers, Depositor depositor) {
 
         try {
-            var contentType = getContentType(headers.getHeaderString("content-type"));
+            MediaType contentType = getContentType(headers.getHeaderString("content-type"));
             var inProgress = getInProgress(headers.getHeaderString("in-progress"));
             var contentDisposition = headers.getHeaderString("content-disposition");
             var md5 = headers.getHeaderString("content-md5");
@@ -109,6 +112,12 @@ public class CollectionResourceImpl extends BaseResource implements CollectionRe
         }
         catch (NotEnoughDiskSpaceException e) {
             throw new WebApplicationException(503);
+        }
+        catch (InvalidSupportedBagPackagingException e) {
+            return buildSwordErrorResponse(SwordError.ERROR_CONTENT_UNSUPPORTED_MEDIA_TYPE);
+        }
+        catch (InvalidContentTypeException e) {
+            return buildSwordErrorResponse(SwordError.ERROR_CONTENT_NOT_ACCEPTABLE);
         }
     }
 }

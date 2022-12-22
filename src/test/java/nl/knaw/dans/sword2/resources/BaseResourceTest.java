@@ -77,7 +77,7 @@ class BaseResourceTest {
         var errorResponseFactory = Mockito.mock(ErrorResponseFactory.class);
         var handler = new BaseResource(errorResponseFactory);
 
-        assertEquals("http://purl.org/net/sword/package/Binary", handler.getPackaging(null));
+        assertEquals("http://purl.org/net/sword/package/BagIt", handler.getPackaging(null));
         assertEquals("input", handler.getPackaging("input"));
     }
 

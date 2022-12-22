@@ -19,12 +19,15 @@ import nl.knaw.dans.sword2.core.Deposit;
 import nl.knaw.dans.sword2.core.DepositState;
 import nl.knaw.dans.sword2.core.auth.Depositor;
 import nl.knaw.dans.sword2.core.config.CollectionConfig;
+import nl.knaw.dans.sword2.core.config.UriRegistry;
 import nl.knaw.dans.sword2.core.exceptions.CollectionNotFoundException;
 import nl.knaw.dans.sword2.core.exceptions.DepositNotFoundException;
 import nl.knaw.dans.sword2.core.exceptions.DepositReadOnlyException;
 import nl.knaw.dans.sword2.core.exceptions.HashMismatchException;
+import nl.knaw.dans.sword2.core.exceptions.InvalidContentTypeException;
 import nl.knaw.dans.sword2.core.exceptions.InvalidDepositException;
 import nl.knaw.dans.sword2.core.exceptions.InvalidPartialFileException;
+import nl.knaw.dans.sword2.core.exceptions.InvalidSupportedBagPackagingException;
 import nl.knaw.dans.sword2.core.exceptions.NotEnoughDiskSpaceException;
 import nl.knaw.dans.sword2.core.finalizer.DepositFinalizerEvent;
 import org.slf4j.Logger;
@@ -73,7 +76,7 @@ public class DepositHandlerImpl implements DepositHandler {
 
     @Override
     public Deposit createDepositWithPayload(String collectionId, Depositor depositor, boolean inProgress, MediaType contentType, String hash, String packaging, String filename, long filesize,
-        InputStream inputStream) throws CollectionNotFoundException, IOException, NotEnoughDiskSpaceException, HashMismatchException, InvalidDepositException {
+        InputStream inputStream) throws CollectionNotFoundException, IOException, NotEnoughDiskSpaceException, HashMismatchException, InvalidDepositException, InvalidSupportedBagPackagingException, InvalidContentTypeException {
 
         var id = UUID.randomUUID().toString();
         var collection = collectionManager.getCollectionByPath(collectionId, depositor);
@@ -91,6 +94,8 @@ public class DepositHandlerImpl implements DepositHandler {
             if (hash == null || !hash.equals(calculatedHash)) {
                 throw new HashMismatchException(String.format("Hash %s does not match expected hash %s", calculatedHash, hash));
             }
+
+            CheckContentError(contentType, packaging);
 
             var deposit = new Deposit();
             deposit.setId(id);
@@ -114,11 +119,18 @@ public class DepositHandlerImpl implements DepositHandler {
 
             return deposit;
         }
-        catch (HashMismatchException | IOException | InvalidDepositException e) {
+        catch (HashMismatchException | IOException | InvalidDepositException | InvalidSupportedBagPackagingException | InvalidContentTypeException e) {
             // cleanup files
             cleanupFile(path);
             throw e;
         }
+    }
+
+    private void CheckContentError(MediaType contentType, String packaging) throws InvalidSupportedBagPackagingException, InvalidContentTypeException {
+        if (!packaging.isEmpty() && !confirmPackageHeader(packaging))
+            throw new InvalidSupportedBagPackagingException(String.format("Unsupported Media Type %s", packaging));
+        if (!confirmContentType(contentType))
+            throw new InvalidContentTypeException(String.format("Not Acceptable content type %s", contentType));
     }
 
     void cleanupFile(Path path) {
@@ -430,4 +442,11 @@ public class DepositHandlerImpl implements DepositHandler {
         return collectionConfig.getUploads().resolve(id);
     }
 
+    private boolean confirmPackageHeader(String packageHeader) {
+        return UriRegistry.PACKAGE_BAGIT.equals(packageHeader) ;
+    }
+
+    private boolean confirmContentType(MediaType contentType) {
+        return UriRegistry.supportedContentType.contains(contentType);
+    }
 }
