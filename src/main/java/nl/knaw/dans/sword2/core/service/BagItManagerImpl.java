@@ -15,14 +15,14 @@
  */
 package nl.knaw.dans.sword2.core.service;
 
-import gov.loc.repository.bagit.domain.Bag;
-import gov.loc.repository.bagit.exceptions.InvalidBagitFileFormatException;
-import gov.loc.repository.bagit.exceptions.MaliciousPathException;
-import gov.loc.repository.bagit.exceptions.UnparsableVersionException;
-import gov.loc.repository.bagit.exceptions.UnsupportedAlgorithmException;
-import gov.loc.repository.bagit.reader.BagReader;
-import gov.loc.repository.bagit.verify.BagVerifier;
-import gov.loc.repository.bagit.writer.ManifestWriter;
+import nl.knaw.dans.bagit.domain.Bag;
+import nl.knaw.dans.bagit.exceptions.InvalidBagitFileFormatException;
+import nl.knaw.dans.bagit.exceptions.MaliciousPathException;
+import nl.knaw.dans.bagit.exceptions.UnparsableVersionException;
+import nl.knaw.dans.bagit.exceptions.UnsupportedAlgorithmException;
+import nl.knaw.dans.bagit.reader.BagReader;
+import nl.knaw.dans.bagit.verify.BagVerifier;
+import nl.knaw.dans.bagit.writer.ManifestWriter;
 import nl.knaw.dans.sword2.core.exceptions.InvalidDepositException;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;

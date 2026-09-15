@@ -22,24 +22,24 @@
     <parent>
         <groupId>nl.knaw.dans</groupId>
         <artifactId>dd-parent</artifactId>
-        <version>1.12.0</version>
+        <version>3.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>dd-sword2</artifactId>
     <version>1.1.10-SNAPSHOT</version>
 
     <name>DD Sword2</name>
-    <url>https://github.com/DANS-KNAW/dd-sword2</url>
     <description>DANS SWORD2 Service</description>
+    <url>https://github.com/DANS-KNAW/dd-sword2</url>
     <inceptionYear>2022</inceptionYear>
-
-    <properties>
-        <main-class>nl.knaw.dans.sword2.DdSword2Application</main-class>
-    </properties>
 
     <scm>
         <developerConnection>scm:git:ssh://github.com/DANS-KNAW/${project.artifactId}</developerConnection>
         <tag>HEAD</tag>
     </scm>
+
+    <properties>
+        <main-class>nl.knaw.dans.sword2.DdSword2Application</main-class>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -103,8 +103,8 @@
         </dependency>
 
         <dependency>
-            <groupId>nl.knaw.dans</groupId>
-            <artifactId>dans-converter-lib</artifactId>
+            <groupId>nl.datastations</groupId>
+            <artifactId>dans-jackson-converter-lib</artifactId>
         </dependency>
 
         <dependency>
@@ -113,14 +113,8 @@
         </dependency>
 
         <dependency>
-            <groupId>nl.knaw.dans</groupId>
-            <artifactId>bagit</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>nl.datastations</groupId>
+            <artifactId>dans-bagit-lib</artifactId>
         </dependency>
 
         <dependency>
@@ -168,52 +162,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <repositories>
-        <repository>
-            <id>dans-releases</id>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <url>https://maven.dans.knaw.nl/releases/</url>
-        </repository>
-        <repository>
-            <id>dans-snapshots</id>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <url>https://maven.dans.knaw.nl/snapshots/</url>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>dans-releases</id>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <url>https://maven.dans.knaw.nl/releases/</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>dans-snapshots</id>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <url>https://maven.dans.knaw.nl/snapshots/</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <profiles>
         <profile>
