@@ -33,7 +33,8 @@
     <inceptionYear>2022</inceptionYear>
 
     <scm>
-        <developerConnection>scm:git:ssh://github.com/DANS-KNAW/${project.artifactId}</developerConnection>
+        <connection>scm:git:https://github.com/DANS-KNAW/dd-sword2</connection>
+        <developerConnection>scm:git:ssh://github.com/DANS-KNAW/dd-sword2</developerConnection>
         <tag>HEAD</tag>
         <url>https://github.com/DANS-KNAW/${project.artifactId}</url>
     </scm>
