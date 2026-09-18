@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>Description - dd-sword2</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Description";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="." class="icon icon-home"> dd-sword2
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Manual</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Description</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#purpose">Purpose</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#interfaces">Interfaces</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#provided-interfaces">Provided interfaces</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#swordv2">SWORDv2</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#deposit-directories">Deposit directories</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#admin-console">Admin console</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#consumed-interfaces">Consumed interfaces</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#auth-delegate">Auth delegate</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#processing">Processing</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#getting-the-service-document">Getting the service document</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#creating-and-submitting-a-deposit">Creating and submitting a deposit</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#continued-deposit">Continued deposit</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#finalizing-a-deposit">Finalizing a deposit</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#tracking-post-submission-processing">Tracking post-submission processing</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#examples">EXAMPLES</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="users/">Users and authentication</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="installation/">Installation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="config/">Configuration</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="context/">Context</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Development</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="dev/">Overview</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">dd-sword2</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Manual</li>
+      <li class="breadcrumb-item active">Description</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/DANS-KNAW/dd-sword2/edit/master/docs/index.md">Edit on DANS-KNAW/dd-sword2</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="dd-sword2">dd-sword2<a class="headerlink" href="#dd-sword2" title="Permanent link">&para;</a></h1>
+<p>DANS SWORD v2 based deposit service</p>
+<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
+<p>At the highest level <code>dd-sword2</code> is a service that accepts ZIP packages that comply with the <a href="https://datatracker.ietf.org/doc/html/rfc8493" target="_blank">BagIt</a> packaging format and produces a
+<a href="https://dans-knaw.github.io/dans-datastation-architecture/deposit-directory/" target="_blank">deposit directory</a> for each.</p>
+<h2 id="interfaces">Interfaces<a class="headerlink" href="#interfaces" title="Permanent link">&para;</a></h2>
+<p>The service has the following interfaces.</p>
+<p><img alt="Overview" src="img/overview.png" width="50%" /></p>
+<h3 id="provided-interfaces">Provided interfaces<a class="headerlink" href="#provided-interfaces" title="Permanent link">&para;</a></h3>
+<h4 id="swordv2">SWORDv2<a class="headerlink" href="#swordv2" title="Permanent link">&para;</a></h4>
+<ul>
+<li><em>Protocol type</em>: HTTP</li>
+<li><em>Internal or external</em>: <strong>external</strong></li>
+<li><em>Purpose</em>: depositing packages, submitting them for archival processing and tracking progress</li>
+</ul>
+<h4 id="deposit-directories">Deposit directories<a class="headerlink" href="#deposit-directories" title="Permanent link">&para;</a></h4>
+<ul>
+<li><em>Protocol type</em>: Shared filesystem</li>
+<li><em>Internal or external</em>: <strong>internal</strong></li>
+<li><em>Purpose</em>: handing packages to the post-submission processing service and reporting back status changes written by that service to the <code>deposit.properties</code>
+  files of the deposit directories</li>
+</ul>
+<h4 id="admin-console">Admin console<a class="headerlink" href="#admin-console" title="Permanent link">&para;</a></h4>
+<ul>
+<li><em>Protocol type</em>: HTTP</li>
+<li><em>Internal or external</em>: <strong>internal</strong></li>
+<li><em>Purpose</em>: application monitoring and management</li>
+</ul>
+<h3 id="consumed-interfaces">Consumed interfaces<a class="headerlink" href="#consumed-interfaces" title="Permanent link">&para;</a></h3>
+<p>The service consumes the following interfaces.</p>
+<h4 id="auth-delegate">Auth delegate<a class="headerlink" href="#auth-delegate" title="Permanent link">&para;</a></h4>
+<ul>
+<li><em>Protocol type</em>: HTTP Basic Auth</li>
+<li><em>Internal or external</em>: <strong>internal</strong></li>
+<li><em>Purpose</em>: delegate authentication of a client for SWORD2</li>
+</ul>
+<p>Authentication is discussed in more detail ot the <a href="users/">User profiles &amp; authentication page</a>.</p>
+<h2 id="processing">Processing<a class="headerlink" href="#processing" title="Permanent link">&para;</a></h2>
+<p>The following sections describe the interaction of a client with the SWORDv2 interface. The examples are <a href="https://www.man7.org/linux/man-pages/man1/curl.1.html" target="_blank">curl</a> commands. The meaning of the
+shell variables is as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>USER</code></td>
+<td>user name of sword client</td>
+</tr>
+<tr>
+<td><code>PASSWORD</code></td>
+<td>password of the sword client</td>
+</tr>
+<tr>
+<td><code>SWORD_BASE_URL</code></td>
+<td>the base URL of the SWORD service <br/>(the same URL is configured in <a href="https://github.com/DANS-KNAW/dd-sword2/blob/master/src/main/assembly/dist/cfg/config.yml" target="_blank">config.yml</a> as <code>sword2.baseUrl</code>)</td>
+</tr>
+<tr>
+<td><code>SWORD_COL_IRI</code></td>
+<td>the URL of the collection that the deposit is sent to</td>
+</tr>
+<tr>
+<td><code>SWORD_EDIT_IRI</code></td>
+<td>the URL to send subsequent parts to in a continued deposit</td>
+</tr>
+</tbody>
+</table>
+<h3 id="getting-the-service-document">Getting the service document<a class="headerlink" href="#getting-the-service-document" title="Permanent link">&para;</a></h3>
+<p>The <a href="https://www.ietf.org/rfc/rfc5023.html#section-8" target="_blank">service document</a> is an XML document that lets the client discover the capabilities and the supported collections of the service. It can
+be <a href="https://swordapp.github.io/SWORDv2-Profile/SWORDProfile.html#protocoloperations_retreivingservicedocument" target="_blank">retrieved</a> with a simple
+GET request:</p>
+<pre><code class="language-bash">curl -X GET -u $USER:$PASSWORD $SWORD_BASE_URL/servicedocument
+</code></pre>
+<div class="admonition tip">
+<p class="admonition-title">Pretty printing XML</p>
+<p>Use <a href="https://linux.die.net/man/1/xmllint" target="_blank">xmllint</a> to display XML output in a more readable format (the final dash is intentional!):</p>
+<p><code>curl -X GET -u $USER:$PASSWORD $SWORD_BASE_URL/servicedocument | xmllint --format -</code></p>
+</div>
+<h3 id="creating-and-submitting-a-deposit">Creating and submitting a deposit<a class="headerlink" href="#creating-and-submitting-a-deposit" title="Permanent link">&para;</a></h3>
+<p>A deposit is created by <a href="https://swordapp.github.io/SWORDv2-Profile/SWORDProfile.html#protocoloperations_creatingresource_binary" target="_blank">binary file deposit</a>. The other options that SWORDv2 specifies are currently not supported. Furthermore, the only
+<a href="https://swordapp.github.io/SWORDv2-Profile/SWORDProfile.html#packaging" target="_blank">packaging</a> that is supported is <code>http://purl.org/net/sword/package/BagIt</code>. This means that:</p>
+<ul>
+<li>the payload of the upload must be a ZIP file containing a <a href="https://datatracker.ietf.org/doc/html/rfc8493" target="_blank">bag</a>;</li>
+<li>the <code>Packaging</code> header must be set to <code>http://purl.org/net/sword/package/BagIt</code>.</li>
+</ul>
+<p>It is furthermore <strong>mandatory</strong> to send along the <code>Content-MD5</code> header. (Note that SWORD2 requires the content of this header to be a <strong>hex encoded</strong> MD5
+digest, rather than the base64 encoded MD5 digest specified in <a href="https://www.rfc-editor.org/rfc/rfc1864.html" target="_blank">RFC1864</a> about Content-MD5.)</p>
+<p>If <code>bag.zip</code> is such a ZIP file, then it can be uploaded as follows:</p>
+<pre><code class="language-bash">export BAG=bag.zip
+curl -X POST \
+     -H 'Content-Type: application/zip' \
+     -H 'Content-Disposition: attachment; filename=bag.zip' \
+     -H &quot;Content-MD5: $(md5 -q $BAG)&quot; \ 
+     -H 'Packaging: http://purl.org/net/sword/package/BagIt' \
+     --data-binary @$BAG -u $USER:$PASSWORD $SWORD_COL_IRI
+</code></pre>
+<p>(The <code>md5</code> command used above is the one from BSD and MacOS. You may have to get the correct output in a different way on other systems.
+On Linux you can use <code>$(md5sum $BAG | cut -d ' ' -f)</code>.)</p>
+<p>If the upload is successful, the client will receive a <a href="https://swordapp.github.io/SWORDv2-Profile/SWORDProfile.html#depositreceipt" target="_blank">deposit receipt</a>. This is an Atom Entry document that contains, among other things, the
+statement URL (Stat-IRI), which is the URL the client can use to <a href="#tracking-post-submission-processing">track post-submision processing</a>.</p>
+<h3 id="continued-deposit">Continued deposit<a class="headerlink" href="#continued-deposit" title="Permanent link">&para;</a></h3>
+<p>If the bag to be uploaded is larger than 1G it is recommended to use a <a href="https://swordapp.github.io/SWORDv2-Profile/SWORDProfile.html#continueddeposit" target="_blank">continued deposit</a>. The client must split the ZIP file into chunks and
+send these in separate requests with the <code>In-Progress</code> header set to <code>true</code> for all chunks except the last. The names of the chunk files must be: the name of
+the complete ZIP file, extended with <code>.n</code>, where n is the sequence number.</p>
+<p><strong>(1)</strong> The first chunk is sent to the collection URL (<a href="https://swordapp.github.io/SWORDv2-Profile/SWORDProfile.html#terminology" target="_blank">Col-IRI</a> in SWORD terms), <strong>(2)</strong> the subsequent chunks are sent to the SWORD "edit" URL
+(<a href="https://swordapp.github.io/SWORDv2-Profile/SWORDProfile.html#terminology" target="_blank">SE-IRI</a>), which can be found in the deposit receipt of the first upload.</p>
+<p>The client indicates that it will be sending more chunks by including the header <code>In-Progress: true</code>. Since the content of each separate chunk is not a valid
+ZIP file, the <code>Content-Type</code> must be set to <code>application/octet-stream</code> (which is a fancy way of saying the content consists of bytes).</p>
+<p>If <code>bag.zip.1</code>, <code>bag.zip.2</code> and <code>bag.zip.3</code> are the chunks created by splitting <code>bag.zip</code>, they can be uploaded as follows:</p>
+<p><strong>Step (1)</strong></p>
+<pre><code class="language-bash">export BAG=bag.zip
+curl -X POST \
+     -H 'Content-Type: application/octet-stream' \
+     -H 'Content-Disposition: attachment; filename=bag.zip.1' \
+     -H 'In-Progress: true' \
+     -H &quot;Content-MD5: $(md5 -q ${BAG}.1)&quot; \ 
+     -H 'Packaging: http://purl.org/net/sword/package/BagIt' \
+     --data-binary @${BAG}.1 -u $USER:$PASSWORD $SWORD_COL_IRI
+</code></pre>
+<p>If the upload is successful the server will respond with a download receipt:</p>
+<pre><code class="language-xml">&lt;entry xmlns=&quot;http://www.w3.org/2005/Atom&quot;&gt;
+    &lt;generator uri=&quot;http://www.swordapp.org/&quot; version=&quot;2.0&quot;/&gt;
+    &lt;id&gt;https://swordserver.org/sword2/container/a5bb644a-78a3-47ae-907a-0bdf162a0cd4&lt;/id&gt;
+    &lt;link href=&quot;https://swordserver.org/sword2/container/a5bb644a-78a3-47ae-907a-0bdf162a0cd4&quot; rel=&quot;edit&quot;/&gt;
+    &lt;link href=&quot;https://swordserver.org/sword2/container/a5bb644a-78a3-47ae-907a-0bdf162a0cd4&quot; rel=&quot;http://purl.org/net/sword/terms/add&quot;/&gt;
+    &lt;link href=&quot;https://swordserver.org/sword2/media/a5bb644a-78a3-47ae-907a-0bdf162a0cd4&quot; rel=&quot;edit-media&quot;/&gt;
+    &lt;packaging xmlns=&quot;http://purl.org/net/sword/terms/&quot;&gt;http://purl.org/net/sword/package/BagIt&lt;/packaging&gt;
+    &lt;link href=&quot;https://swordserver.org/sword2/statement/a5bb644a-78a3-47ae-907a-0bdf162a0cd4&quot; rel=&quot;http://purl.org/net/sword/terms/statement&quot;
+          type=&quot;application/atom+xml; type=feed&quot;/&gt;
+    &lt;treatment xmlns=&quot;http://purl.org/net/sword/terms/&quot;&gt;[1] unpacking [2] verifying integrity [3] storing persistently&lt;/treatment&gt;
+    &lt;verboseDescription xmlns=&quot;http://purl.org/net/sword/terms/&quot;&gt;received successfully: bag.zip.1; MD5: 494dd614e36edf5c929403ed7625b157&lt;/verboseDescription&gt;
+&lt;/entry&gt;
+</code></pre>
+<p><strong>Step (2)</strong></p>
+<p>Parts 2 and 3 sent to the SWORD "edit" URL (<a href="https://swordapp.github.io/SWORDv2-Profile/SWORDProfile.html#terminology" target="_blank">SE-IRI</a>). It can be retrieved from the deposit receipt by finding the link element
+with <code>rel="edit"</code>. In the example this is <code>https://swordserver.org/sword2/container/a5bb644a-78a3-47ae-907a-0bdf162a0cd4</code>.</p>
+<pre><code class="language-bash">curl -X POST \
+     -H 'Content-Type: application/octet-stream' \
+     -H 'Content-Disposition: attachment; filename=bag.zip.2' \
+     -H 'In-Progress: true' \
+     -H &quot;Content-MD5: $(md5 -q ${BAG}.2)&quot; \ 
+     -H 'Packaging: http://purl.org/net/sword/package/BagIt' \
+     --data-binary @${BAG}.2 -u $USER:$PASSWORD $SWORD_EDIT_IRI
+</code></pre>
+<p>For the last part the <code>In-Progress</code> header is set to false.</p>
+<pre><code class="language-bash">curl -X POST \
+     -H 'Content-Type: application/octet-stream' \
+     -H 'Content-Disposition: attachment; filename=bag.zip.3' \
+     -H 'In-Progress: false' \
+     -H &quot;Content-MD5: $(md5 -q ${BAG}.3)&quot; \ 
+     -H 'Packaging: http://purl.org/net/sword/package/BagIt' \
+     --data-binary @${BAG}.3 -u $USER:$PASSWORD $SWORD_EDIT_IRI
+</code></pre>
+<p>After this, the client will have to wait for the server to process the deposit. It should <a href="#tracking-post-submission-processing">track the progress</a> until the
+the server has confirmed that the deposit was fully processed.</p>
+<h3 id="finalizing-a-deposit">Finalizing a deposit<a class="headerlink" href="#finalizing-a-deposit" title="Permanent link">&para;</a></h3>
+<p>When the client sends (the first part of) a bag, the server creates a draft <a href="https://dans-knaw.github.io/dans-datastation-architecture/deposit-directory/" target="_blank">deposit directory</a>. As long as the client is uploading parts of the
+deposit, the state of the deposit directory is <code>DRAFT</code>. When the last part has been received, the state becomes <code>UPLOADED</code>. An "uploaded" deposit is waiting for
+finalization. When a finalization worker becomes available it will:</p>
+<ol>
+<li>change the state of the deposit to <code>FINALIZING</code>;</li>
+<li>concatenate the parts uploaded in a continued deposit into one file in the order indicated by the sequences numbers at the endings of the file names (in a
+   simple deposit this is skipped, of course);</li>
+<li>unzip the file (if this fails, the deposit becomes <code>INVALID</code>);</li>
+<li>validate that resulting directory complies with the <a href="https://datatracker.ietf.org/doc/html/rfc8493" target="_blank">BagIt</a> specs (if this fails, the deposit becomes <code>INVALID</code>);</li>
+<li>change the state to <code>SUBMITTED</code>;</li>
+<li>move the deposit to the directory configured for the collection in <code>sword2.collections.&lt;collection&gt;.deposits</code>. (See <a href="https://github.com/DANS-KNAW/dd-sword2/blob/master/src/main/assembly/dist/cfg/config.yml" target="_blank">config.yml</a>.)</li>
+</ol>
+<p>(Any error <strong>other</strong> than the upload not being a valid ZIP file or not being a valid bag, will cause the deposit to transition to a <code>FAILED</code> state. In other
+words,<code>INVALID</code> indicates faulty input by the client, <code>FAILED</code> means that the server was misconfigured or was experiencing other problems.)</p>
+<p>After this <code>dd-sword2</code>, will <strong>not write to the deposit in any way</strong>. In other words, by moving the deposit tot he deposits directory <code>dd-sword2</code> hands over
+further processing to a post-submission process. The only thing that <code>dd-sword2</code> will continue to do is to serve the client the SWORD Statement whenever
+requested. This ensures the client can keep track of the deposit even after <code>dd-sword2</code> is finished with it.</p>
+<h3 id="tracking-post-submission-processing">Tracking post-submission processing<a class="headerlink" href="#tracking-post-submission-processing" title="Permanent link">&para;</a></h3>
+<p>As soon as the deposit exists, the client can track its state by downloading the SWORD <a href="https://swordapp.github.io/SWORDv2-Profile/SWORDProfile.html#statement" target="_blank">statement</a> from the Statement URL
+(<a href="https://swordapp.github.io/SWORDv2-Profile/SWORDProfile.html#terminology" target="_blank">Stat-IRI</a>). This URL can be found in the deposit receipt in the link with the attribute <code>rel="http://purl.org/net/sword/terms/statement"</code>.</p>
+<p>A SWORD Statement is an Atom Feed document (the RDF/XML serialization is currently <em>not</em> supported by <code>dd-sword2</code>), for example:</p>
+<pre><code class="language-xml">
+&lt;feed xmlns=&quot;http://www.w3.org/2005/Atom&quot;&gt;
+    &lt;id&gt;$SWORD_STAT_IRI&lt;/id&gt;
+    &lt;link href=&quot;$SWORD_STAT_IRI&quot; rel=&quot;self&quot;/&gt;
+    &lt;title type=&quot;text&quot;&gt;Deposit a5bb644a-78a3-47ae-907a-0bdf162a0cd4&lt;/title&gt;
+    &lt;author&gt;
+        &lt;name&gt;user&lt;/name&gt;
+    &lt;/author&gt;
+    &lt;updated&gt;2019-05-23T14:51:15.356Z&lt;/updated&gt;
+    &lt;category term=&quot;ARCHIVED&quot; scheme=&quot;http://purl.org/net/sword/terms/state&quot; label=&quot;State&quot;/&gt;
+    &lt;entry&gt;
+        &lt;content type=&quot;multipart/related&quot; src=&quot;urn:uuid:a5bb644a-78a3-47ae-907a-0bdf162a0cd4&quot;/&gt;
+        &lt;id&gt;urn:uuid:a5bb644a-78a3-47ae-907a-0bdf162a0cd4&lt;/id&gt;
+        &lt;title type=&quot;text&quot;&gt;Resource urn:uuid:a5bb644a-78a3-47ae-907a-0bdf162a0cd4&lt;/title&gt;
+        &lt;summary type=&quot;text&quot;&gt;Resource Part&lt;/summary&gt;
+        &lt;updated&gt;2019-05-23T14:51:22.342Z&lt;/updated&gt;
+        &lt;link href=&quot;https://doi.org/10.5072/dans-Lwgy-zrn-jfyy&quot; rel=&quot;self&quot;/&gt;
+    &lt;/entry&gt;
+&lt;/feed&gt;
+</code></pre>
+<p>The <a href="https://swordapp.github.io/SWORDv2-Profile/SWORDProfile.html#statement" target="_blank">statement</a> provides information about the deposit as it is processed by the server (<code>dd-sword2</code> and any post-submission process), most
+importantly the current state of the deposit. This can be found in the <code>&lt;category&gt;</code> element with the <code>scheme</code> attribute set
+to <code>http://purl.org/net/sword/terms/state</code>. The <code>term</code> attribute of this element contains the current state. The table below lists the states implemented
+by <code>dd-sword2</code> and their meaning. The post-submission process can set the state by updating the <code>state.label</code> and <code>state.description</code> properties in
+the <a href="https://dans-knaw.github.io/dans-datastation-architecture/deposit-directory/#depositproperties" target="_blank">deposit.properties file</a>. The state labels it uses are transparent to <code>dd-sword2</code>. It may for example use <code>ARCHIVED</code> to indicate that
+post-submission processing has finished with successfully archiving the deposit.</p>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DRAFT</code></td>
+<td>The deposit is being prepared by the depositor. It is not submitted to the archive yet <br/> and still open for additional data.</td>
+</tr>
+<tr>
+<td><code>UPLOADED</code></td>
+<td>The deposit is in the process of being submitted. It is waiting to be finalized. The data<br/> is completely uploaded. It will automatically move to the next stage and the status will <br/> be updated accordingly.</td>
+</tr>
+<tr>
+<td><code>FINALIZING</code></td>
+<td>The deposit is in the process of being submitted. It is being checked for validity. It will <br/>  automatically move to the next stage and the status will be updated accordingly.</td>
+</tr>
+<tr>
+<td><code>INVALID</code></td>
+<td>The deposit is not accepted by the archive as the submitted bag is not valid. <br/>The description will detail what part of the bag is not according to specifications. <br/>The depositor is asked to fix the bag and resubmit the deposit.</td>
+</tr>
+<tr>
+<td><code>SUBMITTED</code></td>
+<td>The deposit is submitted for processing. <code>dd-sword2</code> will not update it anymore <br/> and limit itself to providing a Statement document on request.</td>
+</tr>
+<tr>
+<td><code>FAILED</code></td>
+<td>An error occurred while processing the deposit</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples">EXAMPLES<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
+<p>Java client code examples are available in <a href="https://github.com/DANS-KNAW/dd-dans-sword2-examples" target="_blank">dd-dans-sword2-examples</a>.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="users/" class="btn btn-neutral float-right" title="Users and authentication">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/DANS-KNAW/dd-sword2" class="fa fa-code-fork" style="color: #fcfcfc"> DANS-KNAW/dd-sword2</a>
+        </span>
+    
+    
+    
+      <span><a href="users/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
