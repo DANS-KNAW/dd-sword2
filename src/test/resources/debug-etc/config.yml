@@ -70,7 +70,7 @@ sword2:
         - data/tmp/1/outbox/3
       autoClean:
         - INVALID
-      diskSpaceMargin: 2G
+      diskSpaceMargin: 2GB
     - name: 'collection2'
       path: '2'
       uploads: data/tmp/2/uploads
@@ -78,7 +78,7 @@ sword2:
       depositTrackingPath: [ ]
       autoClean:
         - INVALID
-      diskSpaceMargin: 2G
+      diskSpaceMargin: 2GB
   rescheduleDelay: PT30S
   finalizingQueue:
     nameFormat: "finalization-worker-%d"

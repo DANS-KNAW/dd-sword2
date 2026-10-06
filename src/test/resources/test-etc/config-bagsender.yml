@@ -45,7 +45,7 @@ sword2:
       autoClean:
         - REJECTED
         - INVALID
-      diskSpaceMargin: 2G
+      diskSpaceMargin: 2GB
   rescheduleDelay: PT30S
   finalizingQueue:
     nameFormat: "finalization-worker-%d"

@@ -15,14 +15,12 @@
  */
 package nl.knaw.dans.sword2.config;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.dropwizard.util.DataSize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import nl.knaw.dans.convert.jackson.StringByteSizeConverter;
 import nl.knaw.dans.sword2.core.DepositState;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.nio.file.Path;
@@ -41,10 +39,8 @@ public class CollectionConfig {
     private Path uploads;
     @NotNull
     private Path deposits;
-    @Valid
     @NotNull
-    @JsonDeserialize(converter = StringByteSizeConverter.class)
-    private long diskSpaceMargin;
+    private DataSize diskSpaceMargin = DataSize.gigabytes(2);
     @NotNull
     private List<Path> depositTrackingPath = new ArrayList<>();
     private List<DepositState> autoClean = new ArrayList<>();

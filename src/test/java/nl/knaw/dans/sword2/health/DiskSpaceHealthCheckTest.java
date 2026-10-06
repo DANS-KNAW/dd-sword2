@@ -15,6 +15,7 @@
  */
 package nl.knaw.dans.sword2.health;
 
+import io.dropwizard.util.DataSize;
 import nl.knaw.dans.sword2.config.CollectionConfig;
 import nl.knaw.dans.sword2.core.DepositState;
 import nl.knaw.dans.sword2.core.exceptions.NotEnoughDiskSpaceException;
@@ -33,7 +34,7 @@ class DiskSpaceHealthCheckTest {
 
     @Test
     void checkReturnsValidIfNoExceptionIsThrown() {
-        var collection1 = new CollectionConfig("name", "path", Path.of("uploads"), Path.of("deposits"), 100, Collections.emptyList(), List.of(DepositState.INVALID));
+        var collection1 = new CollectionConfig("name", "path", Path.of("uploads"), Path.of("deposits"), DataSize.bytes(100), Collections.emptyList(), List.of(DepositState.INVALID));
         var config = List.of(collection1);
 
         var filesystemSpaceVerifier = Mockito.mock(FilesystemSpaceVerifier.class);
@@ -45,8 +46,8 @@ class DiskSpaceHealthCheckTest {
 
     @Test
     void checkReturnsValidWithMultipleConfigs() throws IOException, NotEnoughDiskSpaceException {
-        var collection1 = new CollectionConfig("name", "path", Path.of("uploads"), Path.of("deposits"), 100, Collections.emptyList(),List.of(DepositState.INVALID));
-        var collection2 = new CollectionConfig("name2", "path2", Path.of("uploads2"), Path.of("deposits2"), 100, Collections.emptyList(),List.of(DepositState.INVALID));
+        var collection1 = new CollectionConfig("name", "path", Path.of("uploads"), Path.of("deposits"), DataSize.bytes(100), Collections.emptyList(),List.of(DepositState.INVALID));
+        var collection2 = new CollectionConfig("name2", "path2", Path.of("uploads2"), Path.of("deposits2"), DataSize.bytes(100), Collections.emptyList(),List.of(DepositState.INVALID));
 
         var config = List.of(collection1, collection2);
 
@@ -58,7 +59,7 @@ class DiskSpaceHealthCheckTest {
 
     @Test
     void checkReturnsInValidIfExceptionIsThrown() throws IOException, NotEnoughDiskSpaceException {
-        var collection1 = new CollectionConfig("name", "path", Path.of("uploads"), Path.of("deposits"), 100, Collections.emptyList(),List.of(DepositState.INVALID));
+        var collection1 = new CollectionConfig("name", "path", Path.of("uploads"), Path.of("deposits"), DataSize.bytes(100), Collections.emptyList(),List.of(DepositState.INVALID));
         var config = List.of(collection1);
 
         var filesystemSpaceVerifier = Mockito.mock(FilesystemSpaceVerifier.class);
@@ -71,8 +72,8 @@ class DiskSpaceHealthCheckTest {
 
     @Test
     void checkReturnsInValidIfExceptionIsThrownButOnlyForOneCollection() throws IOException, NotEnoughDiskSpaceException {
-        var collection1 = new CollectionConfig("name", "path", Path.of("uploads"), Path.of("deposits"), 100, Collections.emptyList(), List.of(DepositState.INVALID));
-        var collection2 = new CollectionConfig("name2", "path2", Path.of("uploads2"), Path.of("deposits2"), 100, Collections.emptyList(),List.of(DepositState.INVALID));
+        var collection1 = new CollectionConfig("name", "path", Path.of("uploads"), Path.of("deposits"), DataSize.bytes(100), Collections.emptyList(), List.of(DepositState.INVALID));
+        var collection2 = new CollectionConfig("name2", "path2", Path.of("uploads2"), Path.of("deposits2"), DataSize.bytes(100), Collections.emptyList(),List.of(DepositState.INVALID));
 
         var config = List.of(collection1, collection2);
 

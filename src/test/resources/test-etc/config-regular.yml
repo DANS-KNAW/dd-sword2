@@ -45,7 +45,7 @@ sword2:
         - ${TEST_DIR}/1/outbox/3
       autoClean:
         - INVALID
-      diskSpaceMargin: 2G
+      diskSpaceMargin: 2GB
     - name: 'collection2'
       path: '2'
       uploads: ${TEST_DIR}/2/uploads
@@ -56,7 +56,7 @@ sword2:
         - ${TEST_DIR}/2/outbox/3
       autoClean:
         - INVALID
-      diskSpaceMargin: 2G
+      diskSpaceMargin: 2GB
   rescheduleDelay: PT30S
   finalizingQueue:
     nameFormat: "finalization-worker-%d"

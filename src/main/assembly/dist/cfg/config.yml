@@ -52,9 +52,9 @@ httpClient:
   retries: 2
 
 sword2:
-  baseUrl: # Fill in external base URL of service, e.g., https://yourserver.com/sword2/
+  baseUrl: https://yourserver.com/sword2/ # Fill in external base URL of service, e.g.,
   nbnResolverBaseUrl: https://persistent-identifier.nl/
-  emailAddress: # Admin e-mail address displayed in error messages to client
+  emailAddress: dummy@example.com # Admin e-mail address displayed in error messages to client
 
   # One or more collections can be defined. Users are granted permission to deposit by adding the name to the list
   # under users[].collections
@@ -77,7 +77,7 @@ sword2:
       # same partition as "deposits"
       uploads: /var/opt/dans.knaw.nl/tmp/sword2-uploads
       # The free disk space margin to use before storing new files on disk.
-      diskSpaceMargin: 2G
+      diskSpaceMargin: 2GB
   finalizingQueue:
     keepAliveTime: 60 seconds
     maxQueueSize: 5000

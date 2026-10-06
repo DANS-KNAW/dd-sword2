@@ -94,7 +94,7 @@ public class DepositHandlerImpl implements DepositHandler {
         try {
             // make sure the upload directory exists
             fileService.ensureDirectoriesExist(collection.getUploads());
-            filesystemSpaceVerifier.assertDirHasEnoughDiskspaceMarginForFile(collection.getUploads(), collection.getDiskSpaceMargin(), filesize);
+            filesystemSpaceVerifier.assertDirHasEnoughDiskspaceMarginForFile(collection.getUploads(), collection.getDiskSpaceMargin().toBytes(), filesize);
 
             // check if the hash matches the one provided by the user
             var calculatedHash = fileService.copyFileWithMD5Hash(inputStream, path);
@@ -163,7 +163,7 @@ public class DepositHandlerImpl implements DepositHandler {
         var path = deposit.getPath().resolve(filename);
         var collection = collectionManager.getCollectionByName(deposit.getCollectionId());
 
-        filesystemSpaceVerifier.assertDirHasEnoughDiskspaceMarginForFile(path.getParent(), collection.getDiskSpaceMargin(), filesize);
+        filesystemSpaceVerifier.assertDirHasEnoughDiskspaceMarginForFile(path.getParent(), collection.getDiskSpaceMargin().toBytes(), filesize);
 
         if (!DepositState.DRAFT.equals(deposit.getState())) {
             throw new DepositReadOnlyException(String.format("Deposit id %s is not in DRAFT state.", deposit.getId()));
@@ -299,7 +299,7 @@ public class DepositHandlerImpl implements DepositHandler {
 
             log.info("Extracting files for deposit {}", depositId);
             bagExtractor.extractBag(path,
-                collection.getDiskSpaceMargin(),
+                collection.getDiskSpaceMargin().toBytes(),
                 deposit.getMimeType(),
                 depositor.getFilepathMapping());
 

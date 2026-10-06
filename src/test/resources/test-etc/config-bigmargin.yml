@@ -44,7 +44,7 @@ sword2:
         - ${TEST_DIR}/outbox/failed
       autoClean:
         - REJECTED
-      diskSpaceMargin: 200000G
+      diskSpaceMargin: 200000GB
   rescheduleDelay: PT30S
   finalizingQueue:
     nameFormat: "finalization-worker-%d"

@@ -45,7 +45,7 @@ public class DiskSpaceHealthCheck extends HealthCheck {
             try {
                 // note that the deposits folder and the uploads folder should be on the same partition so only a single check is required
                 // this is being checked in the UploadDepositIsOnSameFileSystemHealthCheck
-                filesystemSpaceVerifier.assertDirHasEnoughDiskspaceMargin(collection.getUploads(), collection.getDiskSpaceMargin());
+                filesystemSpaceVerifier.assertDirHasEnoughDiskspaceMargin(collection.getUploads(), collection.getDiskSpaceMargin().toBytes());
             }
             catch (NotEnoughDiskSpaceException e) {
                 errors.add(collection);
