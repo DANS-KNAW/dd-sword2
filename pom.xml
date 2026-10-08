@@ -25,7 +25,7 @@
         <version>4.0.0</version>
     </parent>
     <artifactId>dd-sword2</artifactId>
-    <version>1.1.10-SNAPSHOT</version>
+    <version>1.1.10</version>
 
     <name>DD Sword2</name>
     <description>DANS SWORD2 Service</description>
@@ -35,7 +35,7 @@
     <scm>
         <connection>scm:git:https://github.com/DANS-KNAW/dd-sword2</connection>
         <developerConnection>scm:git:ssh://github.com/DANS-KNAW/dd-sword2</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v1.1.10</tag>
         <url>https://github.com/DANS-KNAW/dd-sword2</url>
     </scm>
 
