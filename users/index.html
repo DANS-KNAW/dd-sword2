@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Users and authentication - dd-sword2</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Users and authentication";
+        var mkdocs_page_input_path = "users.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> dd-sword2
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Manual</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="..">Description</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Users and authentication</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#configuring-authentication">Configuring authentication</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#some-example-scenarios">Some example scenarios:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#authentication-process">Authentication process</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#delegation-protocol">Delegation protocol</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../config/">Configuration</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../context/">Context</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Development</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../dev/">Overview</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">dd-sword2</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Manual</li>
+      <li class="breadcrumb-item active">Users and authentication</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/DANS-KNAW/dd-sword2/edit/master/docs/users.md">Edit on DANS-KNAW/dd-sword2</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="user-profiles-authentication">User profiles &amp; authentication<a class="headerlink" href="#user-profiles-authentication" title="Permanent link">&para;</a></h1>
+<p>Some behavior of the <code>dd-sword2</code> service is user specific, meaning that it depends on the user that is depositing data. A user can
+be configured with a profile that determines this behavior. It is also possible to configure a default profile that is used for
+users that do not have a profile of their own. The way a user account is authenticated is determined by its profile and the
+default
+profile together.</p>
+<p>Authentication is explained in more detail below. For the other profile settings, see the comments in the <a href="https://github.com/DANS-KNAW/dd-sword2/blob/master/src/main/assembly/dist/cfg/config.yml" target="_blank">default configuration
+file</a>.</p>
+<h2 id="configuring-authentication">Configuring authentication<a class="headerlink" href="#configuring-authentication" title="Permanent link">&para;</a></h2>
+<p>The <code>dd-sword2</code> service can be configured to authenticate users in the following ways:</p>
+<ul>
+<li>
+<p>Basic authentication (username/password) against a password hash specified in the user's profile. The hash must be calculated
+  with the <a href="https://en.wikipedia.org/wiki/Bcrypt" target="_blank">BCrypt algorithm</a>. In the example below the user's password is
+  simply "user001":</p>
+<pre class="codehilite"><code>userProfiles:
+    users:
+    - name: user001
+      passwordHash: '$2a$10$yvmSYczU7z4KL6qmRCTgTeSvo7uurwPUbB9s/mTKzJrYM/sQKgF.y'
+      collections:
+       - collection1
+      filepathMapping: true
+</code></pre>
+
+</li>
+<li>
+<p>Delegating authentication to a remote service, by forwarding specific headers to that service. This is used for users that are
+  not in aforementioned list, or are in the list but without the <code>passwordHash</code> key. The remote service is configured in the
+  default profile. In the example below the headers <code>Authorization</code> and <code>X-Dataverse-key</code> are forwarded to the remote service.</p>
+<pre class="codehilite"><code>userProfiles:
+    default:
+       passwordDelegate:
+          url: 'http://localhost:20340/'
+          forwardHeaders:
+          - Authorization
+          - X-Dataverse-key
+
+       collections:
+       - collection1
+       filepathMapping: true
+</code></pre>
+
+</li>
+</ul>
+<h3 id="some-example-scenarios">Some example scenarios:<a class="headerlink" href="#some-example-scenarios" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>How to configure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Only users with a profile can deposit data.</td>
+<td>Configure the users in <br/> <code>userProfiles.users</code> with a  <br/><code>passwordHash</code> and leave out <br/> <code>userProfiles.default.passwordDelegate</code><br/> or set it to <code>null</code></td>
+</tr>
+<tr>
+<td>All users can deposit data and share a single profile</td>
+<td>Configure the <br/><code>userProfiles.default</code> section and<br/> include <code>passwordDelegate</code> to the system<br/> that authenticates the users; leave<br/> <code>userProfiles.users</code> null or empty</td>
+</tr>
+<tr>
+<td>All users can deposit data, some users need different settings</td>
+<td>Configure the <code>userProfiles.default</code><br/> section and include <code>passwordDelegate</code><br/> to the system that authenticates <br/>the users; configure the other users in <br/><code>userProfiles.users</code> with their own<br/> settings</td>
+</tr>
+</tbody>
+</table>
+<h2 id="authentication-process">Authentication process<a class="headerlink" href="#authentication-process" title="Permanent link">&para;</a></h2>
+<p>The <code>dd-sword2</code> service uses the following process to authenticate a user:</p>
+<ul>
+<li>If basic authentication credentials are found in the request:<ul>
+<li>If the username in the credential corresponds with a profile that has a <code>passwordHash</code>, validate the password againt the
+  hash.</li>
+<li>Otherwise:<ul>
+<li>If a default profile with a <code>passwordDelegate</code> is configured: delegate authentication to the remote service.</li>
+<li>Return a <code>401 Unauthorized</code> response.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>If no basic authentication credentials are found in the request:<ul>
+<li>If a default profile with a <code>passwordDelegate</code> is configured: delegate authentication to the remote service.</li>
+<li>Return a <code>401 Unauthorized</code> response.</li>
+</ul>
+</li>
+</ul>
+<h2 id="delegation-protocol">Delegation protocol<a class="headerlink" href="#delegation-protocol" title="Permanent link">&para;</a></h2>
+<p>The <code>dd-sword2</code> service delegates authentication to a remote service by forwarding the configured headers to that service, if
+found in the original request, by means of a <code>POST</code> request without a body. The remote service is expected to return a <code>200 OK</code>
+with a body that contains the user's name in a simple json file, for example:</p>
+<pre><code class="language-json">{
+  &quot;userId&quot;: &quot;user001&quot;
+}
+</code></pre>
+<p>If the credentials are not valid, the remote service is expected to return a <code>401 Unauthorized</code>.</p>
+<p>An example implementation of such a remote service can be found in the <a href="https://dans-knaw.github.io/dd-dataverse-authenticator/" target="_blank">dd-dataverse-authenticator</a> project. This
+is the service that is used in the DANS Data Stations.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href=".." class="btn btn-neutral float-left" title="Description"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../installation/" class="btn btn-neutral float-right" title="Installation">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/DANS-KNAW/dd-sword2" class="fa fa-code-fork" style="color: #fcfcfc"> DANS-KNAW/dd-sword2</a>
+        </span>
+    
+    
+      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../installation/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
