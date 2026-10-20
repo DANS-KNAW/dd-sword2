@@ -109,6 +109,60 @@ class SwordAuthenticatorTest {
     }
 
     @Test
+    public void authenticate_should_use_bcrypt_when_unsalted_sha1_is_not_set() throws AuthenticationException {
+        var user = new UserConfig();
+        user.setName("user001");
+        user.setPasswordHash(BCrypt.hashpw("password", BCrypt.gensalt()));
+        user.setFilepathMapping(false);
+        user.setCollections(List.of());
+        var authenticator = getAuthenticator(List.of(user));
+
+        assertThat(user.isUnsaltedSha1()).isFalse();
+        assertThat(authenticator.authenticate(buildCredentials("user001", "password", null))).isPresent();
+        assertThat(authenticator.authenticate(buildCredentials("user001", "incorrect_password", null))).isEmpty();
+        Mockito.verifyNoInteractions(authenticationService);
+    }
+
+    @Test
+    public void authenticate_should_select_password_algorithm_per_user() throws AuthenticationException {
+        var sha1User = new UserConfig("sha1-user", "W6ph5Mm5Pz8GgiULbPgzG37mj9g=", false, List.of(), true);
+        var bcryptUser = new UserConfig("bcrypt-user", BCrypt.hashpw("bcrypt-password", BCrypt.gensalt()), false, List.of(), false);
+        var authenticator = getAuthenticator(List.of(sha1User, bcryptUser));
+
+        var sha1Result = authenticator.authenticate(buildCredentials("sha1-user", "password", null));
+        var bcryptResult = authenticator.authenticate(buildCredentials("bcrypt-user", "bcrypt-password", null));
+
+        assertThat(sha1Result).isPresent();
+        assertEquals("sha1-user", sha1Result.get().getName());
+        assertThat(bcryptResult).isPresent();
+        assertEquals("bcrypt-user", bcryptResult.get().getName());
+        assertThat(authenticator.authenticate(buildCredentials("sha1-user", "bcrypt-password", null))).isEmpty();
+        assertThat(authenticator.authenticate(buildCredentials("bcrypt-user", "password", null))).isEmpty();
+        Mockito.verifyNoInteractions(authenticationService);
+    }
+
+    @Test
+    public void authenticate_should_not_accept_the_unsalted_sha1_hash_as_the_password() throws AuthenticationException {
+        var passwordHash = "W6ph5Mm5Pz8GgiULbPgzG37mj9g=";
+        var user = new UserConfig("user001", passwordHash, false, List.of(), true);
+
+        var result = getAuthenticator(List.of(user)).authenticate(buildCredentials("user001", passwordHash, null));
+
+        assertThat(result).isEmpty();
+        Mockito.verifyNoInteractions(authenticationService);
+    }
+
+    @Test
+    public void authenticate_should_accept_an_empty_password_matching_its_unsalted_sha1_hash() throws AuthenticationException {
+        var user = new UserConfig("user001", "2jmj7l5rSw0yVb/vlWAYkK/YBwk=", false, List.of(), true);
+        var authenticator = getAuthenticator(List.of(user));
+
+        assertThat(authenticator.authenticate(buildCredentials("user001", "", null))).isPresent();
+        assertThat(authenticator.authenticate(buildCredentials("user001", "password", null))).isEmpty();
+        Mockito.verifyNoInteractions(authenticationService);
+    }
+
+    @Test
     public void authenticate_should_accept_unsalted_sha1_password_and_preserve_profile() throws AuthenticationException {
         var user = new UserConfig("user001", "W6ph5Mm5Pz8GgiULbPgzG37mj9g=", true, List.of("collection1"), true);
 
