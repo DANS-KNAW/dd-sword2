@@ -32,4 +32,5 @@ public class UserConfig {
     private String passwordHash;
     private Boolean filepathMapping;
     private List<String> collections;
+    private boolean unsaltedSha1;
 }

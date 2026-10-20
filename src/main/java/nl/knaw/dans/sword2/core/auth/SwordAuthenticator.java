@@ -23,6 +23,10 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -59,7 +63,7 @@ public class SwordAuthenticator implements Authenticator<HeaderCredentials, Depo
                 if (userConfig.getPasswordHash() != null) {
                     log.debug("User is configured with a password hash, validating password for user {}", userConfig.getName());
 
-                    if (BCrypt.checkpw(basicCredentials.getPassword(), userConfig.getPasswordHash())) {
+                    if (checkPassword(basicCredentials.getPassword(), userConfig)) {
                         depositor = Optional.of(new Depositor(userConfig.getName(), userConfig.getFilepathMapping(), Set.copyOf(userConfig.getCollections())));
                     }
                 }
@@ -92,6 +96,19 @@ public class SwordAuthenticator implements Authenticator<HeaderCredentials, Depo
         }
 
         return depositor;
+    }
+
+    private boolean checkPassword(String password, UserConfig userConfig) throws AuthenticationException {
+        if (!userConfig.isUnsaltedSha1()) {
+            return BCrypt.checkpw(password, userConfig.getPasswordHash());
+        }
+        try {
+            var digest = MessageDigest.getInstance("SHA-1").digest(password.getBytes(StandardCharsets.UTF_8));
+            return MessageDigest.isEqual(Base64.getEncoder().encode(digest), userConfig.getPasswordHash().getBytes(StandardCharsets.UTF_8));
+        }
+        catch (NoSuchAlgorithmException e) {
+            throw new AuthenticationException("SHA-1 algorithm is unavailable", e);
+        }
     }
 
     private Optional<String> delegateAuthentication(HeaderCredentials credentials) throws AuthenticationException {
