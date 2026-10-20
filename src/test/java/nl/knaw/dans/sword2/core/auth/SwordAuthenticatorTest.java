@@ -27,6 +27,7 @@ import org.mockito.Mockito;
 import javax.ws.rs.core.MultivaluedHashMap;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
@@ -71,7 +72,7 @@ class SwordAuthenticatorTest {
 
         if (username != null) {
             var formatted = String.format("%s:%s", username, password);
-            var pass = Base64.getEncoder().encodeToString(formatted.getBytes());
+            var pass = Base64.getEncoder().encodeToString(formatted.getBytes(StandardCharsets.UTF_8));
             headers.putSingle("Authorization", "Basic " + pass);
         }
 
@@ -105,6 +106,68 @@ class SwordAuthenticatorTest {
         var result = getAuthenticator(userList).authenticate(buildCredentials("user001", "password", null));
         assertThat(result).isPresent();
         assertEquals("user001", result.get().getName());
+    }
+
+    @Test
+    public void authenticate_should_accept_unsalted_sha1_password_and_preserve_profile() throws AuthenticationException {
+        var user = new UserConfig("user001", "W6ph5Mm5Pz8GgiULbPgzG37mj9g=", true, List.of("collection1"), true);
+
+        var result = getAuthenticator(List.of(user)).authenticate(buildCredentials("user001", "password", null));
+
+        assertThat(result).isPresent();
+        assertEquals("user001", result.get().getName());
+        assertThat(result.get().getFilepathMapping()).isTrue();
+        assertThat(result.get().getCollections()).containsExactly("collection1");
+        Mockito.verifyNoInteractions(authenticationService);
+    }
+
+    @Test
+    public void authenticate_should_reject_incorrect_unsalted_sha1_password_without_delegating() throws AuthenticationException {
+        var user = new UserConfig("user001", "W6ph5Mm5Pz8GgiULbPgzG37mj9g=", false, List.of(), true);
+
+        var result = getAuthenticator(List.of(user)).authenticate(buildCredentials("user001", "incorrect_password", null));
+
+        assertThat(result).isEmpty();
+        Mockito.verifyNoInteractions(authenticationService);
+    }
+
+    @Test
+    public void authenticate_should_hash_unsalted_sha1_password_as_utf8() throws AuthenticationException {
+        var user = new UserConfig("user001", "9Rfd8dMqES/xrVXGbRsSyzjn6Pc=", false, List.of(), true);
+
+        var result = getAuthenticator(List.of(user)).authenticate(buildCredentials("user001", "pässwörd", null));
+
+        assertThat(result).isPresent();
+    }
+
+    @Test
+    public void authenticate_should_reject_malformed_unsalted_sha1_hash() throws AuthenticationException {
+        var user = new UserConfig("user001", "not-a-base64-hash", false, List.of(), true);
+
+        var result = getAuthenticator(List.of(user)).authenticate(buildCredentials("user001", "password", null));
+
+        assertThat(result).isEmpty();
+        Mockito.verifyNoInteractions(authenticationService);
+    }
+
+    @Test
+    public void authenticate_should_not_accept_bcrypt_when_unsalted_sha1_is_enabled() throws AuthenticationException {
+        var user = new UserConfig("user001", BCrypt.hashpw("password", BCrypt.gensalt()), false, List.of(), true);
+
+        var result = getAuthenticator(List.of(user)).authenticate(buildCredentials("user001", "password", null));
+
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    public void authenticate_should_delegate_when_unsalted_sha1_is_enabled_without_a_hash() throws AuthenticationException {
+        var user = new UserConfig("user001", null, false, List.of(), true);
+        Mockito.when(authenticationService.authenticateWithHeaders(Mockito.any())).thenReturn(Optional.of("user001"));
+
+        var result = getAuthenticator(List.of(user)).authenticate(buildCredentials("user001", "password", null));
+
+        assertThat(result).isPresent();
+        Mockito.verify(authenticationService).authenticateWithHeaders(Mockito.any());
     }
 
     @Test

@@ -134,11 +134,14 @@ userProfiles:
       # BCrypt encrypted password (set to the string 'user001')
       # passwordHash: $2a$10$yvmSYczU7z4KL6qmRCTgTeSvo7uurwPUbB9s/mTKzJrYM/sQKgF.y
 
+      # Set to true only for legacy Base64-encoded unsalted SHA1 hashes of UTF-8 passwords.
+      # Defaults to false (BCrypt). Unsalted SHA1 is weak; prefer BCrypt for new passwords.
+      # unsaltedSha1: false
+
       collections:
         - collection1
 
       filepathMapping: true
-
 
 
 

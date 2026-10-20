@@ -16,6 +16,8 @@
 package nl.knaw.dans.sword2.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.dropwizard.configuration.ConfigurationFactory;
 import io.dropwizard.configuration.YamlConfigurationFactory;
 import io.dropwizard.jackson.Jackson;
@@ -37,6 +39,31 @@ public class DdSword2ConfigurationTest {
 
             return factory.build(Path.of(configFile).toFile());
         }
+    }
+
+    @Test
+    public void user_configuration_should_default_to_bcrypt() throws Exception {
+        var mapper = new ObjectMapper(new YAMLFactory());
+        var user = mapper.readValue("name: user001\npasswordHash: hash\n", UserConfig.class);
+
+        assertThat(user.isUnsaltedSha1()).isFalse();
+    }
+
+    @Test
+    public void user_configuration_should_allow_unsalted_sha1() throws Exception {
+        var mapper = new ObjectMapper(new YAMLFactory());
+        var user = mapper.readValue("name: user001\npasswordHash: 'W6ph5Mm5Pz8GgiULbPgzG37mj9g='\nunsaltedSha1: true\n", UserConfig.class);
+
+        assertThat(user.isUnsaltedSha1()).isTrue();
+        assertThat(user.getPasswordHash()).isEqualTo("W6ph5Mm5Pz8GgiULbPgzG37mj9g=");
+    }
+
+    @Test
+    public void user_configuration_should_allow_explicit_bcrypt_selection() throws Exception {
+        var mapper = new ObjectMapper(new YAMLFactory());
+        var user = mapper.readValue("name: user001\nunsaltedSha1: false\n", UserConfig.class);
+
+        assertThat(user.isUnsaltedSha1()).isFalse();
     }
 
     @Test

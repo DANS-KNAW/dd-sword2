@@ -16,13 +16,27 @@ Configuring authentication
 The `dd-sword2` service can be configured to authenticate users in the following ways:
 
 * Basic authentication (username/password) against a password hash specified in the user's profile. The hash must be calculated
-  with the [BCrypt algorithm](https://en.wikipedia.org/wiki/Bcrypt){:target=_blank}. In the example below the user's password is
+  with the [BCrypt algorithm](https://en.wikipedia.org/wiki/Bcrypt){:target=_blank} by default. In the example below the user's password is
   simply "user001":
 
         userProfiles:
             users:
             - name: user001
               passwordHash: '$2a$10$yvmSYczU7z4KL6qmRCTgTeSvo7uurwPUbB9s/mTKzJrYM/sQKgF.y'
+              collections:
+               - collection1
+              filepathMapping: true
+
+  For compatibility with legacy passwords, set `unsaltedSha1: true` on an individual user to use a Base64-encoded unsalted
+  SHA1 hash of the UTF-8 password instead. The flag defaults to `false`, retaining BCrypt authentication. Unsalted SHA1
+  is weak and should only be used for existing legacy hashes; prefer BCrypt for new passwords. This example also uses
+  the password "user001":
+
+        userProfiles:
+            users:
+            - name: user001
+              passwordHash: 'hN/rof975YOfV0wcZVXCrpU8ZlY='
+              unsaltedSha1: true
               collections:
                - collection1
               filepathMapping: true
