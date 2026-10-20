@@ -19,11 +19,13 @@ package nl.knaw.dans.sword2.config;
 import io.dropwizard.client.HttpClientConfiguration;
 import io.dropwizard.core.Configuration;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class DdSword2Configuration extends Configuration {
 
     @Valid

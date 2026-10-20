@@ -453,7 +453,6 @@ class CollectionResourceImplIntegrationTest extends TestFixtureExt {
         multiPart.setMediaType(MediaType.valueOf("multipart/related"));
 
         var result = buildRequest("/collection/1")
-            .header("content-length", 1000)
             .header("in-progress", "true")
             .post(Entity.entity(multiPart, multiPart.getMediaType()));
 
@@ -508,7 +507,6 @@ class CollectionResourceImplIntegrationTest extends TestFixtureExt {
         assert path != null;
 
         var result = buildRequest("/collection/1")
-            .header("content-length", 1000)
             .header("in-progress", "true")
             .header("content-type", "application/atom+xml")
             .post(Entity.entity(path.openStream(), MediaType.valueOf("application/atom+xml")));
