@@ -110,7 +110,10 @@ userProfiles:
     collections:
       - collection1
     # If true, the payload files of received bags will be renamed on extraction. The new name will be a newly created UUID. The mapping to the original path + name (filepath)
-    # is kept in the file original-filepaths.txt in the root of the bag. This file has lines in with the following lay-out
+    # is kept in the file original-filepaths.txt in the root of the bag.
+    # If the incoming bag already contains original-filepaths.txt at its root, filepath mapping is skipped regardless of this setting.
+    # For continued deposits all ZIP parts (or the reassembled octet-stream ZIP) are checked before mapping any files.
+    # The mapping file has lines in with the following lay-out
     #
     # <new filepath>  <original filepath>
     #
@@ -142,7 +145,5 @@ userProfiles:
         - collection1
 
       filepathMapping: true
-
-
 
 

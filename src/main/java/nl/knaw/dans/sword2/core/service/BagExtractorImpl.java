@@ -113,6 +113,16 @@ public class BagExtractorImpl implements BagExtractor {
     void extractZips(Path path, long diskSpaceMargin, boolean filePathMapping) throws IOException, InvalidDepositException, NotEnoughDiskSpaceException {
         var files = getZipFilesInDeposit(path);
 
+        if (filePathMapping) {
+            for (var zipFile : files) {
+                if (zipService.getFilesInZip(zipFile).stream().anyMatch(name -> name.matches("[^/]+/original-filepaths\\.txt"))) {
+                    log.debug("Existing original-filepaths.txt found in {}, skipping file path mapping for the deposit", zipFile);
+                    filePathMapping = false;
+                    break;
+                }
+            }
+        }
+
         for (var zipFile : files) {
             extract(zipFile, path, diskSpaceMargin, filePathMapping);
         }

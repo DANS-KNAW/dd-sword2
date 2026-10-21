@@ -37,6 +37,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -175,6 +177,131 @@ class BagExtractorImplTest extends TestFixture {
 
         var contents3 = FileUtils.readFileToString(testPath.resolve("dir1/root.txt").toFile(), StandardCharsets.UTF_8);
         assertEquals("in root", contents3.trim());
+    }
+
+    @Test
+    void simpleDepositShouldPreserveExistingFilePathMapping() throws Exception, NotEnoughDiskSpaceException {
+        var entries = bagEntries();
+        var originalMapping = "data/test.txt  data/original name.txt\n";
+        entries.put("bag/original-filepaths.txt", originalMapping);
+        createZip("bag.zip", entries);
+
+        realBagExtractor().extractBag(testPath, 1, "application/zip", true);
+
+        assertEquals("test", Files.readString(testPath.resolve("bag/data/test.txt")));
+        assertEquals(originalMapping, Files.readString(testPath.resolve("bag/original-filepaths.txt")));
+        assertEquals(entries.get("bag/manifest-sha1.txt"), Files.readString(testPath.resolve("bag/manifest-sha1.txt")));
+    }
+
+    @Test
+    void simpleDepositShouldStillMapPathsWhenNoMappingExists() throws Exception, NotEnoughDiskSpaceException {
+        createZip("bag.zip", bagEntries());
+
+        realBagExtractor().extractBag(testPath, 1, "application/zip", true);
+
+        Assertions.assertThat(testPath.resolve("bag/data/test.txt")).doesNotExist();
+        Assertions.assertThat(Files.readString(testPath.resolve("bag/original-filepaths.txt"))).contains("  data/test.txt");
+    }
+
+    @Test
+    void simpleDepositShouldNotMapPathsWhenDisabled() throws Exception, NotEnoughDiskSpaceException {
+        createZip("bag.zip", bagEntries());
+
+        realBagExtractor().extractBag(testPath, 1, "application/zip", false);
+
+        assertEquals("test", Files.readString(testPath.resolve("bag/data/test.txt")));
+        Assertions.assertThat(testPath.resolve("bag/original-filepaths.txt")).doesNotExist();
+    }
+
+    @Test
+    void mappingFilenameInPayloadShouldNotDisableMapping() throws Exception, NotEnoughDiskSpaceException {
+        var entries = bagEntries();
+        entries.put("bag/data/original-filepaths.txt", "test");
+        entries.put("bag/manifest-sha1.txt", entries.get("bag/manifest-sha1.txt")
+            + "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3  data/original-filepaths.txt\n");
+        createZip("bag.zip", entries);
+
+        realBagExtractor().extractBag(testPath, 1, "application/zip", true);
+
+        Assertions.assertThat(testPath.resolve("bag/data/test.txt")).doesNotExist();
+        Assertions.assertThat(testPath.resolve("bag/data/original-filepaths.txt")).doesNotExist();
+        Assertions.assertThat(Files.readString(testPath.resolve("bag/original-filepaths.txt")))
+            .contains("  data/test.txt", "  data/original-filepaths.txt");
+    }
+
+    @Test
+    void continuedZipDepositShouldInspectLaterPartsBeforeMappingAnyPayload() throws Exception, NotEnoughDiskSpaceException {
+        var firstPart = createZip("part1.zip", bagEntries());
+        var originalMapping = "data/test.txt  data/first original.txt\ndata/second.txt  data/second original.txt\n";
+        var lastPart = createZip("part2.zip", Map.of(
+            "bag/original-filepaths.txt", originalMapping,
+            "bag/data/second.txt", "second payload"));
+        var extractor = Mockito.spy(new BagExtractorImpl(zipService, fileService, bagItManager, filesystemSpaceVerifier));
+        Mockito.doReturn(List.of(firstPart, lastPart)).when(extractor).getZipFilesInDeposit(testPath);
+
+        extractor.extractBag(testPath, 1, "application/zip", true);
+
+        assertEquals("test", Files.readString(testPath.resolve("bag/data/test.txt")));
+        assertEquals("second payload", Files.readString(testPath.resolve("bag/data/second.txt")));
+        assertEquals(originalMapping, Files.readString(testPath.resolve("bag/original-filepaths.txt")));
+        Mockito.verify(bagItManager, Mockito.times(2)).updateManifests(testPath, Map.of());
+    }
+
+    @Test
+    void continuedOctetStreamDepositShouldPreserveExistingFilePathMapping() throws Exception, NotEnoughDiskSpaceException {
+        var entries = bagEntries();
+        var originalMapping = "data/test.txt  data/original name.txt\n";
+        entries.put("bag/original-filepaths.txt", originalMapping);
+        createOctetStreamParts(entries);
+
+        realBagExtractor().extractBag(testPath, 1, "application/octet-stream", true);
+
+        assertEquals("test", Files.readString(testPath.resolve("bag/data/test.txt")));
+        assertEquals(originalMapping, Files.readString(testPath.resolve("bag/original-filepaths.txt")));
+        assertEquals(entries.get("bag/manifest-sha1.txt"), Files.readString(testPath.resolve("bag/manifest-sha1.txt")));
+        Assertions.assertThat(testPath.resolve("part.1")).doesNotExist();
+        Assertions.assertThat(testPath.resolve("part.2")).doesNotExist();
+    }
+
+    @Test
+    void continuedOctetStreamDepositShouldStillMapPathsWhenNoMappingExists() throws Exception, NotEnoughDiskSpaceException {
+        createOctetStreamParts(bagEntries());
+
+        realBagExtractor().extractBag(testPath, 1, "application/octet-stream", true);
+
+        Assertions.assertThat(testPath.resolve("bag/data/test.txt")).doesNotExist();
+        Assertions.assertThat(Files.readString(testPath.resolve("bag/original-filepaths.txt"))).contains("  data/test.txt");
+    }
+
+    private BagExtractorImpl realBagExtractor() {
+        return new BagExtractorImpl(zipService, fileService, new BagItManagerImpl(fileService, checksumCalculator), filesystemSpaceVerifier);
+    }
+
+    private Map<String, String> bagEntries() {
+        return new HashMap<>(Map.of(
+            "bag/bagit.txt", "BagIt-Version: 0.97\nTag-File-Character-Encoding: UTF-8\n",
+            "bag/manifest-sha1.txt", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3  data/test.txt\n",
+            "bag/data/test.txt", "test"));
+    }
+
+    private Path createZip(String filename, Map<String, String> entries) throws IOException {
+        var zipFile = testPath.resolve(filename);
+        try (var output = new ZipOutputStream(Files.newOutputStream(zipFile))) {
+            for (var entry : entries.entrySet()) {
+                output.putNextEntry(new ZipEntry(entry.getKey()));
+                output.write(entry.getValue().getBytes(StandardCharsets.UTF_8));
+                output.closeEntry();
+            }
+        }
+        return zipFile;
+    }
+
+    private void createOctetStreamParts(Map<String, String> entries) throws IOException {
+        var zipFile = createZip("bag.zip", entries);
+        var bytes = Files.readAllBytes(zipFile);
+        Files.write(testPath.resolve("part.2"), Arrays.copyOfRange(bytes, bytes.length / 2, bytes.length));
+        Files.write(testPath.resolve("part.1"), Arrays.copyOfRange(bytes, 0, bytes.length / 2));
+        Files.delete(zipFile);
     }
 
     @Test
