@@ -115,7 +115,7 @@ public class BagExtractorImpl implements BagExtractor {
 
         if (filePathMapping) {
             for (var zipFile : files) {
-                if (zipService.getFilesInZip(zipFile).stream().anyMatch(name -> name.matches("[^/]+/original-filepaths\\.txt"))) {
+                if (zipService.getFilesInZip(zipFile).stream().anyMatch(name -> Path.of(name).normalize().toString().matches("[^/]+/original-filepaths\\.txt"))) {
                     log.debug("Existing original-filepaths.txt found in {}, skipping file path mapping for the deposit", zipFile);
                     filePathMapping = false;
                     break;
